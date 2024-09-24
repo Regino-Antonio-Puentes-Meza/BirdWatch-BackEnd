@@ -11,8 +11,6 @@
   },
   
   "dependencies": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mongose": "^0.0.2-security",
@@ -21,31 +19,15 @@
     "react-dom": "^18"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/mongoose": "^5.11.97",
-=======
-    "bcryptjs": "^2.4.3",
-    "mongoose": "^8.6.0",
-    "next": "14.2.6",
-    "react": "^18",
-    "react-dom": "^18",
-    "yup": "^1.4.0"
-  },
-  "devDependencies": {
->>>>>>> Stashed changes
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
-<<<<<<< Updated upstream
     "nodemon": "^3.1.4",
-=======
->>>>>>> Stashed changes
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-=======
+    "typescript": "^5",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -56,16 +38,5 @@
     "react": "^18",
     "react-dom": "^18",
     "yup": "^1.4.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.16.5",
-    "@types/react": "^18.3.5",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.6",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.6.2"
->>>>>>> Stashed changes
   }
 }
