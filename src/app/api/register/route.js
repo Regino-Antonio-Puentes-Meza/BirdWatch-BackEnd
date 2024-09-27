@@ -6,19 +6,16 @@ import { registerSchema } from '../../../validation/registerSchema';
 
 export async function POST(req) {
   try {
-    // Obtener los datos del cuerpo de la solicitud
-    const body = await req.json();
+    const body = await req.json(); // Obtener datos del cuerpo
 
-    // Validar los datos utilizando el esquema de validación
+    // Validar datos
     await registerSchema.validate(body);
 
     const { nombre, apellidos, usuario, correoElectronico, contrasena } = body;
 
-    // Conectar a la base de datos
-    await dbConnect();
+    await dbConnect(); // Conectar a la base de datos
 
-    // Verificar si el usuario o el correo ya existe
-    const userExists = await User.findOne({ $or: [{ correoElectronico }, { usuario }] });
+    const userExists = await User.findOne({ $or: [{ correoElectronico }, { usuario }] }); // Verificar existencia
     if (userExists) {
       let message = userExists.correoElectronico === correoElectronico
         ? 'El correo ya está registrado'
@@ -26,11 +23,9 @@ export async function POST(req) {
       return createCORSResponse({ message }, 400);
     }
 
-    // Encriptar la contraseña
-    const hashedPassword = await bcrypt.hash(contrasena, 10);
+    const hashedPassword = await bcrypt.hash(contrasena, 10); // Encriptar contraseña
 
-    // Crear un nuevo usuario
-    const newUser = new User({
+    const newUser = new User({ // Crear nuevo usuario
       nombre,
       apellidos,
       usuario,
@@ -38,22 +33,17 @@ export async function POST(req) {
       contrasena: hashedPassword,
     });
 
-    await newUser.save();
+    await newUser.save(); // Guardar en la base de datos
 
-    // Responder con éxito
-    return createCORSResponse({ message: 'Usuario creado exitosamente' }, 201);
+    return createCORSResponse({ message: 'Usuario creado exitosamente' }, 201); // Responder con éxito
   } catch (error) {
-    // Si es un error de validación (Yup), devolver un error 400
     if (error.name === 'ValidationError') {
-      return createCORSResponse({ error: error.message }, 400);
+      return createCORSResponse({ error: error.message }, 400); // Manejo de error de validación
     }
-
-    // Otros errores
-    return createCORSResponse({ error: error.message }, 500);
+    return createCORSResponse({ error: error.message }, 500); // Otros errores
   }
 }
 
-// Manejar las solicitudes OPTIONS para CORS
 export async function OPTIONS() {
-  return handleCORSOptions();
+  return handleCORSOptions(); // Manejar CORS para OPTIONS
 }
