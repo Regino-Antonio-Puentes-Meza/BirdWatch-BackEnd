@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 import { POST, OPTIONS } from '../app/api/register/route';
-import dbConnect from '../lib/dbConnect';
 import User from '../models/User';
 import bcrypt from 'bcryptjs';
 import { registerSchema } from '../validation/registerSchema';
@@ -15,12 +14,12 @@ describe('POST /api/register', () => {
         jest.clearAllMocks();
     });
 
-    it('debería crear un nuevo usuario exitosamente', async () => {
+    it('should successfully create a new user', async () => {
         const mockUser = {
-            nombre: 'John',
-            apellidos: 'Doe',
-            usuario: 'johndoe',
-            correoElectronico: 'john@example.com',
+            nombre: 'Roy',
+            apellidos: 'MR',
+            usuario: 'roys99',
+            correoElectronico: 'Roy@example.com',
             contrasena: 'password123'
         };
 
@@ -41,17 +40,17 @@ describe('POST /api/register', () => {
         expect(responseBody.message).toBe('Usuario creado exitosamente');
     });
 
-    it('debería devolver 400 si el correo ya está registrado', async () => {
+    it('should return 400 if the mail is already registered', async () => {
         const mockUser = {
-            nombre: 'John',
-            apellidos: 'Doe',
-            usuario: 'johndoe',
-            correoElectronico: 'john@example.com',
+            nombre: 'Roy',
+            apellidos: 'MR',
+            usuario: 'roys99',
+            correoElectronico: 'Roy@example.com',
             contrasena: 'password123'
         };
 
         registerSchema.validate.mockResolvedValue(mockUser);
-        User.findOne.mockResolvedValue({ correoElectronico: 'john@example.com' });
+        User.findOne.mockResolvedValue({ correoElectronico: 'Roy@example.com' });
 
         const req = new NextRequest('http://localhost:3000/api/register', {
             method: 'POST',
@@ -64,17 +63,17 @@ describe('POST /api/register', () => {
         expect(response.status).toBe(400);
         expect(responseBody.message).toBe('El correo ya está registrado');
     });
-    it('debería devolver 400 si el usuario ya está registrado', async () => {
+    it('should return 400 if the user is already registered', async () => {
         const mockUser = {
-            nombre: 'John',
-            apellidos: 'Doe',
-            usuario: 'johndoe',
-            correoElectronico: 'john@example.com',
+            nombre: 'Roy',
+            apellidos: 'MR',
+            usuario: 'roys99',
+            correoElectronico: 'Roy@example.com',
             contrasena: 'password123'
         };
 
         registerSchema.validate.mockResolvedValue(mockUser);
-        User.findOne.mockResolvedValue({ usuario: 'johndoe' });
+        User.findOne.mockResolvedValue({ usuario: 'roys99' });
 
         const req = new NextRequest('http://localhost:3000/api/register', {
             method: 'POST',
@@ -88,11 +87,11 @@ describe('POST /api/register', () => {
         expect(responseBody.message).toBe('El usuario ya está registrado');
     });
 
-    it('debería devolver 400 si los datos de registro son inválidos', async () => {
+    it('should return 400 if the registration data is invalid', async () => {
         const mockUser = {
-            nombre: 'John',
-            apellidos: 'Doe',
-            usuario: 'johndoe',
+            nombre: 'Roy',
+            apellidos: 'MR',
+            usuario: 'roys99',
             correoElectronico: 'invalid-email',
             contrasena: 'short'
         };
@@ -111,12 +110,12 @@ describe('POST /api/register', () => {
         expect(responseBody.error).toBe('Datos de registro inválidos');
     });
 
-    it('debería manejar errores del servidor', async () => {
+    it('should handle server errors', async () => {
         const mockUser = {
-            nombre: 'John',
-            apellidos: 'Doe',
-            usuario: 'johndoe',
-            correoElectronico: 'john@example.com',
+            nombre: 'Roy',
+            apellidos: 'MR',
+            usuario: 'roys99',
+            correoElectronico: 'Roy@example.com',
             contrasena: 'password123'
         };
 
@@ -135,7 +134,7 @@ describe('POST /api/register', () => {
         expect(responseBody.error).toBe('Error de base de datos');
     });
 
-    it('debería manejar correctamente las solicitudes OPTIONS', async () => {
+    it('should correctly handle OPTIONS requests', async () => {
         const req = new NextRequest('http://localhost:3000/api/register', {
             method: 'OPTIONS',
         });
