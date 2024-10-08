@@ -38,3 +38,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Comandos git
 git add -A  Añadir todo los nuevos cambios realizados en proyecto
 git checkout -b feature/numeroHU  crear rama para trabajar HU, se debe crear estando en rama develop
+
+# Comandos para correr el servidor
+npm run server
