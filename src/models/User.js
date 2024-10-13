@@ -5,8 +5,10 @@ const userSchema = new mongoose.Schema(
     nombre: { type: String, required: true },
     apellidos: { type: String, required: true },
     usuario: { type: String, required: true, unique: true },
+    isOrnitologo: { type: Boolean, default: false, required: true },
     correoElectronico: { type: String, required: true, unique: true },
-    contrasena: { type: String, required: true }
+    contrasena: { type: String, required: true },
+    
   },
   { timestamps: true }
 );

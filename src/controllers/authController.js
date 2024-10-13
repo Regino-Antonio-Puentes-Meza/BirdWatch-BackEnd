@@ -38,7 +38,7 @@ export async function register(req, res) {
 
         // Validar datos
         await registerSchema.validate(body);
-        const { nombre, apellidos, usuario, correoElectronico, contrasena } = body;
+        const { nombre, apellidos, usuario, isOrnitologo, correoElectronico, contrasena } = body;
 
         await dbConnect();
 
@@ -50,8 +50,10 @@ export async function register(req, res) {
             return res.status(400).json({ message });
         }
 
+        
+
         const hashedPassword = await bcrypt.hash(contrasena, 10);
-        const newUser = new User({ nombre, apellidos, usuario, correoElectronico, contrasena: hashedPassword });
+        const newUser = new User({ nombre, apellidos, usuario, isOrnitologo, correoElectronico, contrasena: hashedPassword });
         await newUser.save();
 
         return res.status(201).json({ message: 'Usuario creado exitosamente' });
