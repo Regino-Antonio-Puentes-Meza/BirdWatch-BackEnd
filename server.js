@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './src/routes/authRoutes.js';
+import newsRoute from './src/routes/newsRoute.js';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -26,6 +26,7 @@ console.log('Rutas listas');
 
 // Rutas de la API
 server.use('/api', authRoutes);
+server.use('/api/news', newsRoute)
 
 
 
