@@ -4,14 +4,13 @@ import UserModel from "../models/User.js";
 
 // Crear nueva publicación
 export const createPost = async (req, res) => {
-  // Aquí vamos a extraer la URL de la imagen desde el objeto de solicitud
   const { userId, desc } = req.body;
-  const imageUrl = req.file ? req.file.url : null; // Obtiene la URL de la imagen del middleware
+  const image = req.file ? req.file.path : null; // Usamos la ruta de la imagen
 
   const newPost = new PostModel({
     userId,
     desc,
-    imageUrl, // Almacena la URL de la imagen en la nueva publicación
+    image, // Almacena la URL o la ruta del archivo
   });
 
   try {
