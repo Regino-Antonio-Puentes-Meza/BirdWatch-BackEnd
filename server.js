@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import authRoutes from './src/routes/authRoutes.js';
 import upload from './src/routes/uploadRoute.js';
 import newsRoute from './src/routes/newsRoute.js';
+import posts from './src/routes/postRoute.js';
 import bodyParser from 'body-parser';
 
 dotenv.config();
@@ -30,6 +31,7 @@ console.log('Rutas listas');
 server.use('/api', authRoutes);
 server.use('/api', upload);
 server.use('/api/news', newsRoute)
+server.use('/api/posts', posts)
 
 
 // Si no encuentras ninguna ruta, puedes devolver un error 404

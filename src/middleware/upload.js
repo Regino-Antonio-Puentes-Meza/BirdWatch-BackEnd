@@ -26,13 +26,13 @@ const uploadToAzure = async (req, res, next) => {
             const containerClient = blobServiceClient.getContainerClient(containerName);
             await containerClient.createIfNotExists();
 
-            const blobName = `${Date.now()}-${req.file.originalname}`; // Genera un nombre único
+            const blobName = `${Date.now()}-${req.file.originalname}`;
             const blockBlobClient = containerClient.getBlockBlobClient(blobName);
             const stream = intoStream(req.file.buffer);
             const options = { blobHTTPHeaders: { blobContentType: req.file.mimetype } };
             await blockBlobClient.uploadStream(stream, req.file.size, undefined, options);
 
-            const blobUrl = blockBlobClient.url; // Obtiene la URL del blob
+            const blobUrl = blockBlobClient.url;
             res.json({ message: 'Imagen subida con éxito', url: blobUrl }); // Devuelve la URL en la respuesta
         } catch (error) {
             if (error instanceof AzureError) {
