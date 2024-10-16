@@ -1,9 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './src/routes/authRoutes.js';
-import upload from './src/routes/uploadRoute.js';
+import uploadRoutes from './src/routes/uploadRoute.js';  // Cambié el nombre a 'uploadRoutes' por claridad
 import newsRoute from './src/routes/newsRoute.js';
-import posts from './src/routes/postRoute.js';
+import postRoutes from './src/routes/postRoute.js'; // Cambié el nombre a 'postRoutes' por consistencia
 import bodyParser from 'body-parser';
 
 dotenv.config();
@@ -28,11 +28,10 @@ server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 console.log('Rutas listas');
 
 // Rutas de la API
-server.use('/api', authRoutes);
-server.use('/api', upload);
-server.use('/api/news', newsRoute)
-server.use('/api/posts', posts)
-
+server.use('/api/auth', authRoutes); 
+server.use('/api/upload', uploadRoutes);  
+server.use('/api/news', newsRoute);  
+server.use('/api/posts', postRoutes);  
 
 // Si no encuentras ninguna ruta, puedes devolver un error 404
 server.use((req, res) => {

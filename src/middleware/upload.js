@@ -8,7 +8,7 @@ dotenv.config();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Conexión al Azure Blob Storage
+// Conexión a Azure Blob Storage
 const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
 const containerName = 'imagenes';
 
@@ -33,7 +33,11 @@ const uploadToAzure = async (req, res, next) => {
             await blockBlobClient.uploadStream(stream, req.file.size, undefined, options);
 
             const blobUrl = blockBlobClient.url;
-            res.json({ message: 'Imagen subida con éxito', url: blobUrl }); // Devuelve la URL en la respuesta
+
+            // Guardar la URL de la imagen en req.body para su posterior uso
+            req.body.imageUrl = blobUrl;
+
+            next();
         } catch (error) {
             if (error instanceof AzureError) {
                 console.error('Error de Azure:', error);
