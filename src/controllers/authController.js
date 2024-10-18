@@ -25,10 +25,17 @@ export async function login(req, res) {
             return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
         }
 
-        return res.status(200).json({ message: 'Inicio de sesión exitoso' });
+        // Devolver datos del usuario junto con el mensaje de éxito
+        return res.status(200).json({
+            message: 'Inicio de sesión exitoso',
+            nombre: user.nombre,  // Incluye el nombre del usuario
+            apellidos: user.apellidos, // También puedes incluir otros campos
+            usuario: user.usuario,
+            correoElectronico: user.correoElectronico,
+        });
     } catch (error) {
-        return res.status(500).json({ error: error.message });    }
-
+        return res.status(500).json({ error: error.message });
+    }
 }
 
 // Manejo de registro
@@ -50,7 +57,7 @@ export async function register(req, res) {
             return res.status(400).json({ message });
         }
 
-        
+
 
         const hashedPassword = await bcrypt.hash(contrasena, 10);
         const newUser = new User({ nombre, apellidos, usuario, isOrnitologo, correoElectronico, contrasena: hashedPassword });

@@ -1,28 +1,41 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const postSchema = mongoose.Schema(
-  {
-    userId: { type: String, required: true },
-    desc: String,
-    likes: [],
-    comments: [
-        {
-            usuario: String,
-            comment: String
-        }
-    ],
-    image: String,
+const postSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
-  {
-    timestamps: true,
+  birdType: {
+    type: String,
+    required: true
+  },
+  sightingLocation: {
+    type: String,
+    required: true
+  },
+  sightingDate: {
+    type: Date,
+    required: true
+  },
+  camera: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-);
+});
 
-postSchema.methods.setImage = function setImage(image) {
-  const {host, port} = require('../config').default;
-  this.image = `${host}:${port}/public/${image}`;
-};
+const Post = mongoose.model('Post', postSchema);
 
-var PostModel = mongoose.model("Posts", postSchema);
-export default PostModel;
+export default Post;

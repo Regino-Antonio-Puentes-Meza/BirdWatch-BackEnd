@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import authRoutes from './src/routes/authRoutes.js';
 import newsRoute from './src/routes/newsRoute.js';
 import bodyParser from 'body-parser';
+import userRoutes from './src/routes/userRoutes.js'
+import postRoute from './src/routes/postRoute.js'
 
 dotenv.config();
 
@@ -27,8 +29,8 @@ console.log('Rutas listas');
 // Rutas de la API
 server.use('/api', authRoutes);
 server.use('/api/news', newsRoute)
-
-
+server.use('/api/user', userRoutes)
+server.use('/api/post', postRoute)
 
 // Si no encuentras ninguna ruta, puedes devolver un error 404
 server.use((req, res) => {
