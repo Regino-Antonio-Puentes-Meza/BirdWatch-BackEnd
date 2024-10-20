@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+  userHandle: { // Cambiar userId a userHandle
+    type: String, // Cambiar de ObjectId a String si deseas almacenar el handle directamente
     required: true
   },
   birdType: {

@@ -8,13 +8,13 @@ import dbConnect from '../lib/dbConnect.js'; // Asegúrate de que la ruta sea co
 
 // Crear una nueva publicación
 export const createPost = async (req, res) => {
-  const { userId, birdType, sightingLocation, sightingDate, camera, description, image } = req.body;
+  const { userHandle, birdType, sightingLocation, sightingDate, camera, description, image } = req.body;
 
   try {
     await dbConnect();  // Asegúrate de que la conexión a la DB esté funcionando correctamente.
 
     const newPost = new Post({
-      userId,
+      userHandle, // Cambiar userId por userHandle
       birdType,
       sightingLocation,
       sightingDate,
@@ -23,11 +23,16 @@ export const createPost = async (req, res) => {
       image
     });
 
+    console.log("Datos recibidos en el backend:", req.body);
+
     const savedPost = await newPost.save();  // Aquí puede estar ocurriendo el error.
     res.status(201).json(savedPost);
   } catch (error) {
-    // Esto te ayudará a saber cuál es el error exacto
-    res.status(500).json({ message: error.message });
+    console.error("Error al crear el post:", error);
+    res.status(500).json({
+        message: 'Error al crear el post.',
+        error: error.message // Asegúrate de enviar el mensaje de error completo
+    });
   }
 };
 
