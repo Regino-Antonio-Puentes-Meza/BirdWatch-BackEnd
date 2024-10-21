@@ -5,6 +5,8 @@ import newsRoute from './src/routes/newsRoute.js';
 import bodyParser from 'body-parser';
 import userRoutes from './src/routes/userRoutes.js'
 import postRoute from './src/routes/postRoute.js'
+import birdRoute from './src/routes/birdsRoutes.js'
+
 
 dotenv.config();
 
@@ -31,6 +33,7 @@ server.use('/api', authRoutes);
 server.use('/api/news', newsRoute)
 server.use('/api/user', userRoutes)
 server.use('/api/post', postRoute)
+server.use('/api/birds', birdRoute)
 
 // Si no encuentras ninguna ruta, puedes devolver un error 404
 server.use((req, res) => {
