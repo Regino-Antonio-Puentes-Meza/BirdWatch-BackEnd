@@ -2,6 +2,13 @@ import PostModel from "../models/Post.js";
 import mongoose from "mongoose";
 import UserModel from "../models/User.js";
 
+// Creat new Post
+import Post from '../models/Post.js';
+import dbConnect from '../lib/dbConnect.js'; // Asegúrate de que la ruta sea correcta
+
+// Crear una nueva publicación
+export const createPost = async (req, res) => {
+  const { userHandle, birdType, sightingLocation, sightingDate, camera, description, image } = req.body;
 // Crear nueva publicación
 export const createPost = async (req, res) => {
   const { userId, desc } = req.body;
@@ -14,10 +21,28 @@ export const createPost = async (req, res) => {
   });
 
   try {
-    await newPost.save();
-    res.status(200).json("Post created!");
+    await dbConnect();  // Asegúrate de que la conexión a la DB esté funcionando correctamente.
+
+    const newPost = new Post({
+      userHandle, // Cambiar userId por userHandle
+      birdType,
+      sightingLocation,
+      sightingDate,
+      camera,
+      description,
+      image
+    });
+
+    console.log("Datos recibidos en el backend:", req.body);
+
+    const savedPost = await newPost.save();  // Aquí puede estar ocurriendo el error.
+    res.status(201).json(savedPost);
   } catch (error) {
-    res.status(500).json(error);
+    console.error("Error al crear el post:", error);
+    res.status(500).json({
+        message: 'Error al crear el post.',
+        error: error.message // Asegúrate de enviar el mensaje de error completo
+    });
   }
 };
 
@@ -26,10 +51,15 @@ export const getPost = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const post = await PostModel.findById(id);
-    res.status(200).json(post);
+    await dbConnect();
+    const post = await PostModel.findById(id).populate('userId', 'nombre usuario'); // Popula los campos 'nombre' y 'usuario' del usuario
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({ message: 'Publicación no encontrada' });
+    }
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -1,6 +1,37 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
+const postSchema = new mongoose.Schema({
+  userHandle: { // Cambiar userId a userHandle
+    type: String, // Cambiar de ObjectId a String si deseas almacenar el handle directamente
+    required: true
+  },
+  birdType: {
+    type: String,
+    required: true
+  },
+  sightingLocation: {
+    type: String,
+    required: true
+  },
+  sightingDate: {
+    type: Date,
+    required: true
+  },
+  camera: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String,
+    required: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
 const postSchema = new Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Relación con el usuario
@@ -18,8 +49,11 @@ const postSchema = new Schema(
   {
     timestamps: true, // Crea automáticamente las fechas de creación y actualización
   }
-);
+});
 
+const Post = mongoose.model('Post', postSchema);
+
+export default Post;
 postSchema.methods.setImage = function setImage(image) {
   const { host, port } = require('../config').default;
   this.image = `${host}:${port}/public/${image}`;
