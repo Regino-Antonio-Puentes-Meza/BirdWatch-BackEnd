@@ -1,10 +1,22 @@
 // authRoutes.js
 import express from 'express';
-import { login, register } from '../controllers/authController.js';
+import { login, register, forgotPassword, resetPassword } from '../controllers/authController.js';
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.post('/login', login);
 router.post('/register', register);
+
+// Ruta para enviar el enlace de recuperación de contraseña
+router.post('/forgot-password', forgotPassword);
+
+// Ruta para restablecer la contraseña usando el token desde el enlace
+router.post('/reset-password', resetPassword);
+
+// Ruta protegida
+router.get('/register', authMiddleware, (req, res) => {
+    res.json({ msg: `Perfil del usuario con ID: ${req.user.id}` });
+});
 
 export default router;

@@ -4,7 +4,7 @@ import authRoutes from './src/routes/authRoutes.js';
 
 dotenv.config();
 
-console.log('Archivo server.js ejecutado');
+console.log('Archivo app.js ejecutado');
 
 const server = express();
 
