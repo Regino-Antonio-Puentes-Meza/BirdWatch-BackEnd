@@ -4,14 +4,20 @@ import Department from '../../models/location/Department.js';
 import dbConnect from '../../lib/dbConnect.js';
 
 export const getMunicipalitiesByDepartment = async (req, res) => {
-  try {
-    const { departmentId } = req.params;  // Obtenemos el id del departamento
-    const municipalities = await Municipality.find({ department: departmentId });
-    res.status(200).json(municipalities);
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener los municipios", error });
-  }
+  const departmentId = parseInt(req.params.departmentId, 10); // Asegúrate de que se esté convirtiendo correctamente
+
+    if (isNaN(departmentId)) {
+        return res.status(400).json({ message: 'Invalid department ID' });
+    }
+
+    try {
+        const municipalities = await Municipality.find({ department: departmentId });
+        res.json(municipalities);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener los municipios', error });
+    }
 };
+
 
 export const createMunicipality = async (req, res) => {
   try {
