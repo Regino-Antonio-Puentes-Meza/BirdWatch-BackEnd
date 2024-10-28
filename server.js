@@ -11,7 +11,6 @@ import birdRoute from './src/routes/birdsRoutes.js'
 import departmentRoutes from './src/routes/location/departmentRoutes.js';
 import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
 
-
 dotenv.config();
 
 console.log('Archivo server.js ejecutado');
@@ -20,6 +19,7 @@ const server = express();
 
 // Configuración de CORS
 server.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Authorization');
     next();
@@ -54,3 +54,11 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+
+dotenv.config();
+
+
+
+server.use(bodyParser.json({ limit: '30mb', extended: true }));
+server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
