@@ -33,7 +33,7 @@ export const createPost = async (req, res) => {
       image
     });
 
-    console.log("Datos recibidos en el backend:", req.body);
+    console.log("Datos recibidos en backend:", req.body);
 
     const savedPost = await newPost.save();  // Aquí puede estar ocurriendo el error.
     res.status(201).json(savedPost);
