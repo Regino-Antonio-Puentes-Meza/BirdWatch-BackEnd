@@ -8,7 +8,7 @@ import dbConnect from '../lib/dbConnect.js'; // Asegúrate de que la ruta sea co
 
 // Crear una nueva publicación
 export const createPost = async (req, res) => {
-  const { userHandle, birdType, sightingLocation, sightingDate, camera, description, image } = req.body;
+  const { userHandle, birdType, sightingLocation, sightingDate, camera, description } = req.body;
 
   try {
     await dbConnect();  // Asegúrate de que la conexión a la DB esté funcionando correctamente.
@@ -19,8 +19,7 @@ export const createPost = async (req, res) => {
       sightingLocation,
       sightingDate,
       camera,
-      description,
-      image
+      description
     });
 
     console.log("Datos recibidos en backend:", req.body);
