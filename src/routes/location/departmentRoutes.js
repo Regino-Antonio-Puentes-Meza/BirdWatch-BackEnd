@@ -1,10 +1,9 @@
-// routes/departmentRoutes.js
 import express from 'express';
-import { getDepartments, createDepartment } from '../../controllers/location/departmentController.js';
+import { createDepartment, getDepartments } from '../../controllers/location/departmentController.js';
 
 const router = express.Router();
 
-router.get('/', getDepartments); // Obtener todos los departamentos
-router.post('/', createDepartment); // Crear un nuevo departamento
+router.post('/', createDepartment);
+router.get('/', getDepartments);
 
 export default router;
