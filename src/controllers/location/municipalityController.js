@@ -18,24 +18,35 @@ export const getMunicipalitiesByDepartment = async (req, res) => {
     }
 };
 
-
-export const createMunicipality = async (req, res) => {
+export const createMultipleMunicipalities = async (req, res) => {
   try {
-    const {  name, departmentId } = req.body; // Cambiar a departmentId
-
     await dbConnect();
 
-    const departmentExists = await Department.findOne({ departmentId });
+    const { municipalities } = req.body; // Array de nombres de municipios
+    const departmentId = null;
+
+    // Verificar que el departamento existe en la base de datos
+    const departmentExists = await Department.findOne({ departmentId }); 
     if (!departmentExists) {
       return res.status(404).json({ message: 'El departamento no existe' });
     }
 
-    const newMunicipality = new Municipality({ name, department: departmentId });
-    await newMunicipality.save();
+    const createdMunicipalities = [];
+    for (const municipalityName of municipalities) {
+      if (municipalityName !== 'Bucaramanga') { // Excluir Medellín
+        // Verificar si el municipio ya existe en la base de datos
+        const municipalityExists = await Municipality.findOne({ name: municipalityName, department: departmentId });
+        if (!municipalityExists) {
+          const newMunicipality = new Municipality({ name: municipalityName, department: departmentId });
+          await newMunicipality.save();
+          createdMunicipalities.push(newMunicipality);
+        }
+      }
+    }
 
     return res.status(201).json({
-      message: 'Municipio creado exitosamente',
-      municipality: newMunicipality,
+      message: 'Municipios creados exitosamente',
+      municipalities: createdMunicipalities,
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });
