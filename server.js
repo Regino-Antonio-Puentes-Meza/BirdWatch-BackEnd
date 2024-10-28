@@ -39,7 +39,7 @@ server.use('/api/user', userRoutes)
 server.use('/api/post', postRoute)
 server.use('/api/birds', birdRoute)
 server.use('/api/departments', departmentRoutes);
-server.use('/api/municipalities', municipalityRoutes);
+server.use('/api/municipalities/multiple', municipalityRoutes);
 server.use('/api/auth', authRoutes); 
 server.use('/api/upload', uploadRoutes);  
 server.use('/api/news', newsRoute);  
