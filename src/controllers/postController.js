@@ -9,16 +9,6 @@ import dbConnect from '../lib/dbConnect.js'; // Asegúrate de que la ruta sea co
 // Crear una nueva publicación
 export const createPost = async (req, res) => {
   const { userHandle, birdType, sightingLocation, sightingDate, camera, description, image } = req.body;
-// Crear nueva publicación
-export const createPost = async (req, res) => {
-  const { userId, desc } = req.body;
-  const image = req.file ? req.file.path : null; // Usamos la ruta de la imagen
-
-  const newPost = new PostModel({
-    userId,
-    desc,
-    image, // Almacena la URL o la ruta del archivo
-  });
 
   try {
     await dbConnect();  // Asegúrate de que la conexión a la DB esté funcionando correctamente.
@@ -46,7 +36,8 @@ export const createPost = async (req, res) => {
   }
 };
 
-// Obtener una publicación por ID
+// Get a post
+
 export const getPost = async (req, res) => {
   const id = req.params.id;
 
@@ -63,7 +54,7 @@ export const getPost = async (req, res) => {
   }
 };
 
-// Actualizar una publicación
+// Update a post
 export const updatePost = async (req, res) => {
   const postId = req.params.id;
   const { userId } = req.body;
@@ -81,7 +72,7 @@ export const updatePost = async (req, res) => {
   }
 };
 
-// Eliminar una publicación
+// Delete a post
 export const deletePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
@@ -90,7 +81,7 @@ export const deletePost = async (req, res) => {
     const post = await PostModel.findById(id);
     if (post.userId === userId) {
       await post.deleteOne();
-      res.status(200).json("Post deleted successfully");
+      res.status(200).json("POst deleted successfully");
     } else {
       res.status(403).json("Action forbidden");
     }
@@ -99,7 +90,7 @@ export const deletePost = async (req, res) => {
   }
 };
 
-// Dar o quitar like a una publicación
+// like/dislike a post
 export const likePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
@@ -111,22 +102,19 @@ export const likePost = async (req, res) => {
       res.status(200).json("Post liked");
     } else {
       await post.updateOne({ $pull: { likes: userId } });
-      res.status(200).json("Post unliked");
+      res.status(200).json("Post Unliked");
     }
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-// Obtener las publicaciones del timeline (del usuario y sus seguidos)
+// Get Timeline POsts
 export const getTimelinePosts = async (req, res) => {
   const userId = req.params.id;
 
   try {
-    // Publicaciones del usuario actual
     const currentUserPosts = await PostModel.find({ userId: userId });
-
-    // Publicaciones de las personas que el usuario sigue
     const followingPosts = await UserModel.aggregate([
       {
         $match: {
@@ -135,25 +123,27 @@ export const getTimelinePosts = async (req, res) => {
       },
       {
         $lookup: {
-          from: "posts", // El nombre de la colección de publicaciones
-          localField: "following", // Campo que indica a quiénes sigue el usuario
-          foreignField: "userId", // Campo que relaciona las publicaciones con los usuarios seguidos
-          as: "followingPosts", // Nombre del array con las publicaciones de los seguidos
+          from: "posts",
+          localField: "following",
+          foreignField: "userId",
+          as: "followingPosts",
         },
       },
       {
         $project: {
-          followingPosts: 1, // Proyectar (incluir) las publicaciones de los seguidos
-          _id: 0, // Excluir el campo _id del resultado
+          followingPosts: 1,
+          _id: 0,
         },
       },
     ]);
 
-    // Combinar las publicaciones del usuario y las de las personas que sigue
-    const allPosts = currentUserPosts.concat(...followingPosts[0].followingPosts)
-      .sort((a, b) => b.createdAt - a.createdAt); // Ordenar por fecha de creación, descendente
-
-    res.status(200).json(allPosts);
+    res
+      .status(200)
+      .json(currentUserPosts.concat(...followingPosts[0].followingPosts)
+      .sort((a,b)=>{
+          return b.createdAt - a.createdAt;
+      })
+      );
   } catch (error) {
     res.status(500).json(error);
   }
