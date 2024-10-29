@@ -10,7 +10,7 @@ import birdRoutes from './src/routes/birdsRoutes.js';
 import departmentRoutes from './src/routes/location/departmentRoutes.js';
 import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
 import dbConnect from './src/config/dbConnect.js';
-import authMiddleware from './src/middleware/authMiddleware.js';
+import authMiddleware from './src/middlewares/authMiddleware.js';
 
 dotenv.config();
 
@@ -34,15 +34,23 @@ async function startServer() {
     server.use(express.json());
     server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 
-    // Rutas de la API
-    server.use('/api/auth', authRoutes);
-    server.use('/api/upload', authMiddleware, uploadRoutes);
-    server.use('/api/news', authMiddleware, newsRoutes);
-    server.use('/api/posts', authMiddleware, postRoutes);
-    server.use('/api/user', userRoutes);
-    server.use('/api/birds', birdRoutes);
-    server.use('/api/departments', departmentRoutes);
-    server.use('/api/municipalities', municipalityRoutes);
+    // Middleware para registrar las solicitudes
+    server.use((req, res, next) => {
+      console.info(`Solicitud ${req.method} en la ruta ${req.originalUrl}`);
+      next(); // Llama a next() para pasar al siguiente middleware o controlador
+    });
+
+   // Rutas públicas (no requieren autenticación)
+   server.use('/api/auth', authRoutes);
+
+   // Rutas protegidas (requieren autenticación)
+   server.use('/api/upload', authMiddleware, uploadRoutes);
+   server.use('/api/news', authMiddleware, newsRoutes);
+   server.use('/api/posts', authMiddleware, postRoutes);
+   server.use('/api/user', authMiddleware, userRoutes);
+   server.use('/api/birds', authMiddleware, birdRoutes);
+   server.use('/api/departments', authMiddleware, departmentRoutes);
+   server.use('/api/municipalities', authMiddleware, municipalityRoutes);
 
     // Ruta 404 para rutas no encontradas
     server.use((req, res) => {
@@ -54,7 +62,7 @@ async function startServer() {
     });
 
   } catch (error) {
-    console.error('Error al conectar con la base de datos:', error.message);
+    console.error('Se a presentado el siguiente error en la ejecución: ', error.message);
   }
 }
 
