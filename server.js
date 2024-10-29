@@ -1,21 +1,24 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import authRoutes from './src/routes/authRoutes.js';
-import uploadRoutes from './src/routes/uploadRoute.js';  // Cambié el nombre a 'uploadRoutes' por claridad
-import newsRoute from './src/routes/newsRoute.js';
-import postRoutes from './src/routes/postRoute.js'; // Cambié el nombre a 'postRoutes' por consistencia
 import bodyParser from 'body-parser';
-import userRoutes from './src/routes/userRoutes.js'
-import postRoute from './src/routes/postRoute.js'
-import birdRoute from './src/routes/birdsRoutes.js'
+import authRoutes from './src/routes/authRoutes.js';
+import uploadRoutes from './src/routes/uploadRoute.js';
+import newsRoutes from './src/routes/newsRoute.js';
+import postRoutes from './src/routes/postRoute.js';
+import userRoutes from './src/routes/userRoutes.js';
+import birdRoutes from './src/routes/birdsRoutes.js';
 import departmentRoutes from './src/routes/location/departmentRoutes.js';
 import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
+import dbConnect from './src/lib/dbConnect.js';
+import authMiddleware from './src/middleware/authMiddleware.js';
+
 
 dotenv.config();
-
-console.log('Archivo server.js ejecutado');
+dbConnect();
+console.log('Conexión a la base de datos establecida');
 
 const server = express();
+const PORT = process.env.PORT || 3000;
 
 // Configuración de CORS
 server.use((req, res, next) => {
@@ -25,32 +28,25 @@ server.use((req, res, next) => {
     next();
 });
 
-// Middleware para manejo de JSON
+// Middleware para manejo de JSON y datos codificados
 server.use(express.json());
-server.use(bodyParser.json({ limit: '30mb', extended: true }));
 server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 
-console.log('Rutas listas');
-
 // Rutas de la API
-server.use('/api', authRoutes);
-server.use('/api/news', newsRoute)
-server.use('/api/user', userRoutes)
-server.use('/api/post', postRoute)
-server.use('/api/birds', birdRoute)
+server.use('/api/auth', authRoutes);
+server.use('/api/upload',authMiddleware, uploadRoutes);
+server.use('/api/news', authMiddleware, newsRoutes);
+server.use('/api/posts',authMiddleware, postRoutes);
+server.use('/api/user', userRoutes);
+server.use('/api/birds', birdRoutes);
 server.use('/api/departments', departmentRoutes);
 server.use('/api/municipalities', municipalityRoutes);
-server.use('/api/auth', authRoutes); 
-server.use('/api/upload', uploadRoutes);  
-server.use('/api/news', newsRoute);  
-server.use('/api/posts', postRoutes);  
 
-// Si no encuentras ninguna ruta, puedes devolver un error 404
+// Ruta 404 para rutas no encontradas
 server.use((req, res) => {
     res.status(404).json({ message: 'Ruta no encontrada' });
 });
 
-const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

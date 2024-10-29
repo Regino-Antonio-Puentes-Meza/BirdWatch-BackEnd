@@ -9,9 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'tuClaveSecretaJWT';
 export async function login(req, res) {
     try {
         const { correoElectronico, contrasena } = req.body;
-
         try {
-            await dbConnect();
         } catch (error) {
             console.error('Error al conectar a la base de datos:', error);
             return res.status(500).json({ error: 'Error al conectar a la base de datos' });

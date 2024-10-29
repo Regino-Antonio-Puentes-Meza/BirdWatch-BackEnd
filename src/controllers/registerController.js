@@ -14,9 +14,6 @@ export async function register(req, res) {
         // Validar datos
         await registerSchema.validate(body);
         const { nombre, apellidos, usuario, isOrnitologo, correoElectronico, contrasena } = body;
-
-        await dbConnect();
-
         const userExists = await User.findOne({ $or: [{ correoElectronico }, { usuario }] });
         if (userExists) {
             let message = userExists.correoElectronico === correoElectronico
