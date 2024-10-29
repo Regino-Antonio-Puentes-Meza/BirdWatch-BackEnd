@@ -1,6 +1,9 @@
 // authRoutes.js
 import express from 'express';
-import { login, register, forgotPassword, resetPassword } from '../controllers/authController.js';
+import { login } from '../controllers/loginController.js';
+import { register } from '../controllers/registerController.js';
+import {resetPassword } from '../controllers/resetPasswordController.js';
+import { forgotPassword } from '../controllers/forgotPasswordController.js';
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();

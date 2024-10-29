@@ -12,49 +12,50 @@ import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
 import dbConnect from './src/config/dbConnect.js';
 import authMiddleware from './src/middleware/authMiddleware.js';
 
-
-dotenv.config();
-dbConnect();
-console.log('Conexión a la base de datos establecida');
-
-const server = express();
-const PORT = process.env.PORT || 3000;
-
-// Configuración de CORS
-server.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Authorization');
-    next();
-});
-
-// Middleware para manejo de JSON y datos codificados
-server.use(express.json());
-server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
-
-// Rutas de la API
-server.use('/api/auth', authRoutes);
-server.use('/api/upload',authMiddleware, uploadRoutes);
-server.use('/api/news', authMiddleware, newsRoutes);
-server.use('/api/posts',authMiddleware, postRoutes);
-server.use('/api/user', userRoutes);
-server.use('/api/birds', birdRoutes);
-server.use('/api/departments', departmentRoutes);
-server.use('/api/municipalities', municipalityRoutes);
-
-// Ruta 404 para rutas no encontradas
-server.use((req, res) => {
-    res.status(404).json({ message: 'Ruta no encontrada' });
-});
-
-server.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
-
-
 dotenv.config();
 
+async function startServer() {
+  try {
+    await dbConnect();
+    console.log('Conexión a la base de datos establecida');
 
+    const server = express();
+    const PORT = process.env.PORT || 3000;
 
-server.use(bodyParser.json({ limit: '30mb', extended: true }));
-server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
+    // Configuración de CORS
+    server.use((req, res, next) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Authorization');
+      next();
+    });
+
+    // Middleware para manejo de JSON y datos codificados
+    server.use(express.json());
+    server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
+
+    // Rutas de la API
+    server.use('/api/auth', authRoutes);
+    server.use('/api/upload', authMiddleware, uploadRoutes);
+    server.use('/api/news', authMiddleware, newsRoutes);
+    server.use('/api/posts', authMiddleware, postRoutes);
+    server.use('/api/user', userRoutes);
+    server.use('/api/birds', birdRoutes);
+    server.use('/api/departments', departmentRoutes);
+    server.use('/api/municipalities', municipalityRoutes);
+
+    // Ruta 404 para rutas no encontradas
+    server.use((req, res) => {
+      res.status(404).json({ message: 'Ruta no encontrada' });
+    });
+
+    server.listen(PORT, () => {
+      console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    });
+
+  } catch (error) {
+    console.error('Error al conectar con la base de datos:', error.message);
+  }
+}
+
+startServer();
