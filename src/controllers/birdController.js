@@ -1,4 +1,4 @@
-import dbConnect from '../lib/dbConnect.js';
+import dbConnect from '../config/dbConnect.js';
 import Bird from "../models/Bird.js";
 
 // Crear una nueva especie de ave

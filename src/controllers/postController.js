@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Post from "../models/Post.js";
-import UserModel from "../models/User.js";
-import dbConnect from '../lib/dbConnect.js';
+import UserModel from "../models/UserModel.js";
+import dbConnect from '../config/dbConnect.js';
 
 const handleError = (res, error, message = 'Error en la operación') => {
   console.error(message, error);

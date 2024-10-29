@@ -9,7 +9,7 @@ import userRoutes from './src/routes/userRoutes.js';
 import birdRoutes from './src/routes/birdsRoutes.js';
 import departmentRoutes from './src/routes/location/departmentRoutes.js';
 import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
-import dbConnect from './src/lib/dbConnect.js';
+import dbConnect from './src/config/dbConnect.js';
 import authMiddleware from './src/middleware/authMiddleware.js';
 
 
