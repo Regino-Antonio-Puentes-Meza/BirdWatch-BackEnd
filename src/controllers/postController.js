@@ -10,7 +10,7 @@ const handleError = (res, error, message = 'Error en la operación') => {
 
 // Crear una nueva publicación
 export const createPost = async (req, res) => {
-  const { userHandle, birdType, sightingLocation, sightingDate, camera, description, image } = req.body;
+  const { userHandle, birdType, sightingLocation, sightingDate, camera, description } = req.body;
 
   try {
     await dbConnect();

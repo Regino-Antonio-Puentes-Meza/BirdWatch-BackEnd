@@ -50,8 +50,8 @@ async function startServer() {
    server.use('/api/user', authMiddleware, userRoutes);
    server.use('/api/birds', authMiddleware, birdRoutes);
    server.use('/api/departments', authMiddleware, departmentRoutes);
-   server.use('/api/municipalities', authMiddleware, municipalityRoutes);
-
+   server.use('/api/municipalities/multiple', authMiddleware, municipalityRoutes);
+   
     // Ruta 404 para rutas no encontradas
     server.use((req, res) => {
       res.status(404).json({ message: 'Ruta no encontrada' });
