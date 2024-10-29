@@ -21,7 +21,7 @@ async function dbConnect() {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      console.log('Conectado a la base de datos');
+      console.log('Conectando a la base de datos');
       return mongoose;
     }).catch((error) => {
       if (error.code === 'ETIMEOUT') {
