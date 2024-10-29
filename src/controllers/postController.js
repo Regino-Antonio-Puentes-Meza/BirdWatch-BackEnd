@@ -25,9 +25,6 @@ export const createPost = async (req, res) => {
       image: `${host}:${port}/public/${image}`,
     });
 
-    const savedPost = await newPost.save();
-    console.log("Datos recibidos en backend:", req.body);
-
     const savedPost = await newPost.save();  // Aquí puede estar ocurriendo el error.
     res.status(201).json(savedPost);
   } catch (error) {
@@ -105,7 +102,6 @@ export const getTimelinePosts = async (req, res) => {
   const userId = req.params.id;
 
   try {
-    const currentUserPosts = await Post.find({ userId });
     const currentUserPosts = await PostModel.find({ userId: userId });
     const followingPosts = await UserModel.aggregate([
       {
