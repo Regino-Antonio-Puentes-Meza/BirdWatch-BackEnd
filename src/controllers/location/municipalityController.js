@@ -1,7 +1,7 @@
 // controllers/municipalityController.js
 import Municipality from '../../models/location/Municipality.js';
 import Department from '../../models/location/Department.js';
-import dbConnect from '../../lib/dbConnect.js';
+import dbConnect from '../../config/dbConnect.js';
 
 export const getMunicipalitiesByDepartment = async (req, res) => {
   const departmentId = parseInt(req.params.departmentId, 10); // Asegúrate de que se esté convirtiendo correctamente

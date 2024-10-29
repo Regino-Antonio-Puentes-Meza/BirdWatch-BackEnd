@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import dbConnect from '../lib/dbConnect.js';
-import User from '../models/User.js';
+import dbConnect from '../config/dbConnect.js';
+import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 
 // Clave secreta para firmar el token (asegúrate de definir esta variable en tus variables de entorno)
@@ -9,9 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'tuClaveSecretaJWT';
 export async function login(req, res) {
     try {
         const { correoElectronico, contrasena } = req.body;
-
         try {
-            await dbConnect();
         } catch (error) {
             console.error('Error al conectar a la base de datos:', error);
             return res.status(500).json({ error: 'Error al conectar a la base de datos' });

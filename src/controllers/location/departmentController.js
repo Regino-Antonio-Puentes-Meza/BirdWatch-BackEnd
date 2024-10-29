@@ -1,5 +1,4 @@
-// controllers/departmentController.js
-import dbConnect from '../../lib/dbConnect.js';
+import dbConnect from '../../config/dbConnect.js';
 import Department from '../../models/location/Department.js';
 
 export const getDepartments = async (req, res) => {

@@ -1,4 +1,4 @@
-import dbConnect from '../lib/dbConnect.js';
+import dbConnect from '../config/dbConnect.js';
 import Bird from "../models/Bird.js";
 
 // Crear una nueva especie de ave
@@ -8,7 +8,7 @@ export const createBird = async (req, res) => {
 
 
     try {
-      await dbConnect();
+      
     } catch (error) {
       console.error('Error al conectar a la base de datos:', error);
       return res.status(500).json({ error: 'Error al conectar a la base de datos' });
@@ -33,7 +33,6 @@ export const createBird = async (req, res) => {
 // Obtener todas las especies de aves
 export const getAllBirds = async (req, res) => {
   try {
-    await dbConnect();
     const birds = await Bird.find(); // Asegúrate de que `Bird` es tu modelo correcto
     res.status(200).json(birds);
   } catch (error) {
@@ -46,7 +45,6 @@ export const getBirdById = async (req, res) => {
   const id = req.params.id;
 
   try {
-    await dbConnect();
     const bird = await Bird.findById(id); // Busca ave por su ID
     if (!bird) {
       return res.status(404).json({ message: 'Ave no encontrada' });
@@ -63,7 +61,6 @@ export const updateBird = async (req, res) => {
   const { commonName, scientificName, family, imageUrl } = req.body;
 
   try {
-    await dbConnect();
     const updatedBird = await Bird.findByIdAndUpdate(
       id,
       { commonName, scientificName, family, imageUrl },
@@ -83,7 +80,6 @@ export const deleteBird = async (req, res) => {
   const id = req.params.id;
 
   try {
-    await dbConnect();
     const deletedBird = await Bird.findByIdAndDelete(id); // Elimina ave por ID
     if (!deletedBird) {
       return res.status(404).json({ message: 'Ave no encontrada' });

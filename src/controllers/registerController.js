@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import dbConnect from '../lib/dbConnect.js';
-import User from '../models/User.js';
+import dbConnect from '../config/dbConnect.js';
+import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import { registerSchema } from '../validation/registerSchema.js';
 
@@ -14,9 +14,6 @@ export async function register(req, res) {
         // Validar datos
         await registerSchema.validate(body);
         const { nombre, apellidos, usuario, isOrnitologo, correoElectronico, contrasena } = body;
-
-        await dbConnect();
-
         const userExists = await User.findOne({ $or: [{ correoElectronico }, { usuario }] });
         if (userExists) {
             let message = userExists.correoElectronico === correoElectronico
