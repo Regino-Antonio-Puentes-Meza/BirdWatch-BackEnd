@@ -1,63 +1,77 @@
 import mongoose from 'mongoose';
 
-const postSchema = new mongoose.Schema({
-  userHandle: { // Cambiar userId a userHandle
-    type: String, // Cambiar de ObjectId a String si deseas almacenar el handle directamente
-    required: true
-  },
-  birdType: {
-    type: String,
-    required: true
-  },
-  sightingLocation: {
-    type: String,
-    required: true
-  },
-  sightingDate: {
-    type: Date,
-    required: true
-  },
-  camera: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  image: {
-    type: String,
-    required: false
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-const postSchema = new Schema(
+const postSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Relación con el usuario
-    desc: { type: String, maxLength: 500 }, // Descripción de la publicación
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Referencias a los usuarios que dieron like
+    userHandle: { 
+      type: String, 
+      required: true 
+    },
+    birdType: {
+      type: String,
+      required: true
+    },
+    sightingLocation: {
+      type: String,
+      required: true
+    },
+    sightingDate: {
+      type: Date,
+      required: true
+    },
+    camera: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    image: {
+      type: String,
+      required: false
+    },
+    userId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User', 
+      required: true 
+    }, 
+    desc: { 
+      type: String, 
+      maxLength: 500 
+    }, 
+    likes: [{ 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User' 
+    }], 
     comments: [
       {
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Usuario que comentó
-        comment: { type: String, required: true, maxLength: 300 }, // Comentario
-        createdAt: { type: Date, default: Date.now } 
+        userId: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: 'User' 
+        }, 
+        comment: { 
+          type: String, 
+          required: true, 
+          maxLength: 300 
+        }, 
+        createdAt: { 
+          type: Date, 
+          default: Date.now 
+        }
       }
-    ],
-    image: { type: String }, // Ruta o URL de la imagen
+    ]
   },
   {
-    timestamps: true, // Crea automáticamente las fechas de creación y actualización
+    timestamps: true, // Crea automáticamente createdAt y updatedAt
   }
-});
+);
 
-const Post = mongoose.model('Post', postSchema);
-
-export default Post;
+// Método para establecer la URL de la imagen
 postSchema.methods.setImage = function setImage(image) {
   const { host, port } = require('../config').default;
   this.image = `${host}:${port}/public/${image}`;
 };
 
-const PostModel = mongoose.model("Posts", postSchema);
-export default PostModel;
+const Post = mongoose.model('Post', postSchema);
+
+export default Post;
