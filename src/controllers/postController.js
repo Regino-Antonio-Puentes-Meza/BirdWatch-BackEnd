@@ -26,9 +26,7 @@ export const createPost = async (req, res) => {
     });
 
     // const savedPost = await newPost.save();
-  
 
-    const savedPost = await newPost.save();
     res.status(201).json(savedPost);
     console.log("Datos recibidos en backend:", req.body);
   } catch (error) {
@@ -106,7 +104,6 @@ export const getTimelinePosts = async (req, res) => {
   const userId = req.params.id;
 
   try {
-    // const currentUserPosts = await Post.find({ userId });
     const currentUserPosts = await PostModel.find({ userId: userId });
     const followingPosts = await UserModel.aggregate([
       {
