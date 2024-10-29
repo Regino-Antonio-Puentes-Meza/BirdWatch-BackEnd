@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import dbConnect from '../lib/dbConnect.js';
-import User from '../models/User.js';
+import dbConnect from '../config/dbConnect.js';
+import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import { registerSchema } from '../validation/registerSchema.js';
 

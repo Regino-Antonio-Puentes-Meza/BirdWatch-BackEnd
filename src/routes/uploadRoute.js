@@ -1,6 +1,12 @@
 import express from 'express';
-import uploadToAzure from '../middleware/upload.js';
+import uploadToAzure from '../middlewares/upload.js';
 const router = express.Router();
+
+// Middleware para registrar las solicitudes
+router.use((req, res, next) => {
+    console.log(`Solicitud ${req.method} en la ruta ${req.originalUrl}`);
+    next();
+});
 
 router.post('/upFile', uploadToAzure, (req, res) => {
     if (req.body.imageUrl) {

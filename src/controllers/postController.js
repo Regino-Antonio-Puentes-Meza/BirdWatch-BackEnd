@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Post from "../models/Post.js";
-import UserModel from "../models/User.js";
-import dbConnect from '../lib/dbConnect.js';
+import UserModel from "../models/UserModel.js";
+import dbConnect from '../config/dbConnect.js';
 
 const handleError = (res, error, message = 'Error en la operación') => {
   console.error(message, error);
@@ -25,8 +25,10 @@ export const createPost = async (req, res) => {
       image: `${host}:${port}/public/${image}`,
     });
 
-    const savedPost = await newPost.save();  // Aquí puede estar ocurriendo el error.
+    // const savedPost = await newPost.save();
+
     res.status(201).json(savedPost);
+    console.log("Datos recibidos en backend:", req.body);
   } catch (error) {
     handleError(res, error, "Error al crear el post");
   }
