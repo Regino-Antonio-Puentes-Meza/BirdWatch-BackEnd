@@ -12,6 +12,7 @@ import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
 import dbConnect from './src/lib/dbConnect.js';
 import authMiddleware from './src/middleware/authMiddleware.js';
 
+
 dotenv.config();
 dbConnect();
 console.log('Conexión a la base de datos establecida');
@@ -49,3 +50,11 @@ server.use((req, res) => {
 server.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+
+dotenv.config();
+
+
+
+server.use(bodyParser.json({ limit: '30mb', extended: true }));
+server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));

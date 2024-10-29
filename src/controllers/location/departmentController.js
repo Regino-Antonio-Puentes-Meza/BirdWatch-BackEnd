@@ -4,7 +4,8 @@ import Department from '../../models/location/Department.js';
 
 export const getDepartments = async (req, res) => {
   try {
-    const departments = await Department.find();
+    await dbConnect(); // Asegurarse de que haya conexión con la base de datos
+    const departments = await Department.find(); // Obtener todos los departamentos
     res.status(200).json(departments);
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los departamentos", error });
@@ -13,7 +14,7 @@ export const getDepartments = async (req, res) => {
 
 export const createDepartment = async (req, res) => {
     try {
-      const { _id, name } = req.body; // Ahora recibimos el ID y el nombre
+      const { departmentId, name } = req.body; // Ahora recibimos el ID y el nombre
   
       // Conectar a la base de datos
       try {
@@ -25,7 +26,7 @@ export const createDepartment = async (req, res) => {
   
       // Verificar si el departamento ya existe por nombre o ID
       const departmentExists = await Department.findOne({ 
-        $or: [{ _id }, { name }] 
+        $or: [{ departmentId }, { name }] 
       });
   
       if (departmentExists) {
@@ -35,7 +36,7 @@ export const createDepartment = async (req, res) => {
       }
   
       // Crear y guardar el nuevo departamento
-      const newDepartment = new Department({ _id, name });
+      const newDepartment = new Department({ departmentId, name });
       await newDepartment.save();
   
       return res.status(201).json({

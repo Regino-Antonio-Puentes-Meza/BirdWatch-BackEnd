@@ -26,13 +26,15 @@ export const createPost = async (req, res) => {
     });
 
     const savedPost = await newPost.save();
+    console.log("Datos recibidos en backend:", req.body);
+
+    const savedPost = await newPost.save();  // Aquí puede estar ocurriendo el error.
     res.status(201).json(savedPost);
   } catch (error) {
     handleError(res, error, "Error al crear el post");
   }
 };
 
-// Obtener una publicación
 export const getPost = async (req, res) => {
   const id = req.params.id;
 
@@ -44,7 +46,7 @@ export const getPost = async (req, res) => {
   }
 };
 
-// Actualizar una publicación
+// Update a post
 export const updatePost = async (req, res) => {
   const postId = req.params.id;
   const { userId } = req.body;
@@ -62,7 +64,7 @@ export const updatePost = async (req, res) => {
   }
 };
 
-// Eliminar una publicación
+// Delete a post
 export const deletePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
@@ -71,7 +73,7 @@ export const deletePost = async (req, res) => {
     const post = await Post.findById(id);
     if (post.userId.equals(userId)) {
       await post.deleteOne();
-      res.status(200).json("Post deleted successfully");
+      res.status(200).json("POst deleted successfully");
     } else {
       res.status(403).json("Action forbidden");
     }
@@ -80,7 +82,6 @@ export const deletePost = async (req, res) => {
   }
 };
 
-// Like/Dislike a post
 export const likePost = async (req, res) => {
   const id = req.params.id;
   const { userId } = req.body;
@@ -99,12 +100,13 @@ export const likePost = async (req, res) => {
   }
 };
 
-// Obtener publicaciones de la línea de tiempo
+
 export const getTimelinePosts = async (req, res) => {
   const userId = req.params.id;
 
   try {
     const currentUserPosts = await Post.find({ userId });
+    const currentUserPosts = await PostModel.find({ userId: userId });
     const followingPosts = await UserModel.aggregate([
       {
         $match: { _id: new mongoose.Types.ObjectId(userId) },
@@ -129,6 +131,13 @@ export const getTimelinePosts = async (req, res) => {
     timelinePosts.sort((a, b) => b.createdAt - a.createdAt);
 
     res.status(200).json(timelinePosts);
+    res
+      .status(200)
+      .json(currentUserPosts.concat(...followingPosts[0].followingPosts)
+      .sort((a,b)=>{
+          return b.createdAt - a.createdAt;
+      })
+      );
   } catch (error) {
     handleError(res, error, "Error al obtener la línea de tiempo de publicaciones");
   }

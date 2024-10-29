@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const DepartmentSchema = new mongoose.Schema(
     {
-        deartmentId: {
+        departmentId: {
             type: Number,  
             required: true,
             unique: true
