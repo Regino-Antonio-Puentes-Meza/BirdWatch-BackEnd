@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import UserModel from "../models/UserModel.js";
-import dbConnect from '../config/dbConnect.js';
 
 const handleError = (res, error, message = 'Error en la operación') => {
   console.error(message, error);
@@ -13,8 +12,6 @@ export const createPost = async (req, res) => {
   const { userHandle, birdType, sightingLocation, sightingDate, camera, description } = req.body;
 
   try {
-    await dbConnect();
-
     const newPost = new Post({
       userHandle,
       birdType,
@@ -25,7 +22,7 @@ export const createPost = async (req, res) => {
       image: `${host}:${port}/public/${image}`,
     });
 
-    // const savedPost = await newPost.save();
+    const savedPost = await newPost.save();
 
     res.status(201).json(savedPost);
     console.log("Datos recibidos en backend:", req.body);

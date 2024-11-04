@@ -22,6 +22,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "**/*.js", "src/__tests__/.env.test.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "**/*.js", "src/__tests__/.env.test.js", "jest.config.cjs", "babel.config.cjs"],
   "exclude": ["node_modules"]
 }
