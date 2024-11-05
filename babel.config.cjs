@@ -9,6 +9,6 @@ module.exports = {
                 modules: 'auto', // Permite que Babel decida si debe usar módulos ES o CommonJS
             },
         ],
-        '@babel/preset-react', // Debe estar en un array separado
+        '@babel/preset-typescript', // Debe estar en un array separado
     ],
 };

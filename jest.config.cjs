@@ -6,7 +6,10 @@ module.exports = {
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.js'],
     transform: {
-        '^.+\\.js$': 'babel-jest', // Asegúrate de que Babel se use para transformar archivos JS
+        '^.+\\.js$': 'babel-jest',
     },
-    testMatch: ['**/tests/**/*.test.js'], // Asegúrate de que tus pruebas estén en la carpeta correcta
+    testMatch: ['**/tests/**/*.test.js'],
+    transformIgnorePatterns: [
+        '/node_modules/(?!into-stream|@azure/storage-blob)', // Permite que estos módulos se transformen
+    ],
 };
