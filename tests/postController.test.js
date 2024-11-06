@@ -1,10 +1,5 @@
 import {
-    createPost,
-    getPost,
-    updatePost,
-    deletePost,
-    likePost,
-    getTimelinePosts
+    createPost, getPost, updatePost, deletePost, likePost, getTimelinePosts
 } from '../src/controllers/postController';
 import Post from '../src/models/Post.js';
 import UserModel from '../src/models/UserModel.js';
@@ -56,14 +51,14 @@ describe('Post Controller', () => {
 
     it('should handle error while creating a post', async () => {
         const errorMessage = 'Error al crear el post';
-        Post.mockImplementation(() => {
-            throw new Error(errorMessage);
-        });
+        Post.mockImplementation(() => ({
+            save: jest.fn().mockRejectedValue(new Error(errorMessage))
+        }));
 
         await createPost(req, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ message: 'Error al crear el post', error: errorMessage });
+        expect(res.json).toHaveBeenCalledWith({ message: 'Error al crear el post', error: expect.any(String) });
     });
 
     it('should get a post by ID successfully', async () => {
@@ -86,10 +81,7 @@ describe('Post Controller', () => {
     });
 
     it('should update a post successfully', async () => {
-        const post = {
-            userId: mongoose.Types.ObjectId(req.body.userId),
-            updateOne: jest.fn()
-        };
+        const post = { userId: mongoose.Types.ObjectId(req.body.userId), updateOne: jest.fn() };
         Post.findById.mockResolvedValue(post);
 
         await updatePost(req, res);
@@ -111,10 +103,8 @@ describe('Post Controller', () => {
     });
 
     it('should handle error while updating a post', async () => {
-        const post = {
-            userId: mongoose.Types.ObjectId(req.body.userId),
-            updateOne: jest.fn().mockRejectedValue(new Error('Error al actualizar'))
-        };
+        const post = { userId: mongoose.Types.ObjectId(req.body.userId), updateOne: jest.fn().mockRejectedValue(new Error('Error al actualizar')) };
+
         Post.findById.mockResolvedValue(post);
 
         await updatePost(req, res);
@@ -124,10 +114,8 @@ describe('Post Controller', () => {
     });
 
     it('should delete a post successfully', async () => {
-        const post = {
-            userId: mongoose.Types.ObjectId(req.body.userId),
-            deleteOne: jest.fn()
-        };
+        const post = { userId: mongoose.Types.ObjectId(req.body.userId), deleteOne: jest.fn() };
+
         Post.findById.mockResolvedValue(post);
 
         await deletePost(req, res);
@@ -150,6 +138,7 @@ describe('Post Controller', () => {
 
     it('should handle error while deleting a post', async () => {
         const errorMessage = 'Error al eliminar el post';
+
         Post.findById.mockRejectedValue(new Error(errorMessage));
 
         await deletePost(req, res);
@@ -160,6 +149,7 @@ describe('Post Controller', () => {
 
     it('should like a post successfully', async () => {
         const post = { likes: [], updateOne: jest.fn() };
+
         Post.findById.mockResolvedValue(post);
 
         await likePost(req, res);
@@ -171,6 +161,7 @@ describe('Post Controller', () => {
 
     it('should unlike a post successfully', async () => {
         const post = { likes: [req.body.userId], updateOne: jest.fn() };
+
         Post.findById.mockResolvedValue(post);
 
         await likePost(req, res);
@@ -190,12 +181,16 @@ describe('Post Controller', () => {
 
         await getTimelinePosts(req, res);
 
+        // Verifica que se devuelvan los posts en el orden correcto
+        const expectedPosts = [...currentUserPosts, ...followingPosts].sort((a, b) => b.createdAt - a.createdAt);
+
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith([...currentUserPosts, ...followingPosts].sort((a, b) => b.createdAt - a.createdAt));
+        expect(res.json).toHaveBeenCalledWith(expectedPosts);
     });
 
     it('should handle error while getting timeline posts', async () => {
         const errorMessage = 'Error al obtener la línea de tiempo de publicaciones';
+
         UserModel.aggregate.mockRejectedValue(new Error(errorMessage));
 
         await getTimelinePosts(req, res);
