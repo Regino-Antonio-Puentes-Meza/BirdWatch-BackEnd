@@ -10,7 +10,7 @@ const handleError = (res, error, message = 'Error en la operación') => {
 
 // Crear una nueva publicación
 export const createPost = async (req, res) => {
-  const { userHandle, birdType, sightingLocation, sightingDate, camera, description } = req.body;
+  const { userHandle, birdType, sightingLocation, sightingDate, camera, description, imageUrl } = req.body;
 
   try {
     await dbConnect();
@@ -22,6 +22,7 @@ export const createPost = async (req, res) => {
       sightingDate,
       camera,
       description,
+      image: imageUrl, // Guardar la URL de la imagen
     });
 
     const savedPost = await newPost.save();
@@ -61,6 +62,22 @@ export const updatePost = async (req, res) => {
     handleError(res, error, "Error al actualizar el post");
   }
 };
+
+// Obtener publicaciones aleatorias para el feed
+export const getRandomPosts = async (req, res) => {
+  const numberOfPosts = parseInt(req.query.limit) || 10; // Puedes definir el límite de publicaciones que quieres obtener al azar
+
+  try {
+    const posts = await Post.aggregate([
+      { $sample: { size: numberOfPosts } } // Selecciona `numberOfPosts` publicaciones aleatorias
+    ]);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    handleError(res, error, "Error al obtener las publicaciones aleatorias");
+  }
+};
+
 
 // Delete a post
 export const deletePost = async (req, res) => {

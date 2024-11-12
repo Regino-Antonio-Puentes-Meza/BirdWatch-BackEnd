@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, deletePost, getPost, getTimelinePosts, likePost, updatePost } from "../controllers/postController.js";
+import { createPost, deletePost, getPost, getTimelinePosts, likePost, updatePost, getRandomPosts } from "../controllers/postController.js";
 
 const router = express.Router();
 
@@ -10,6 +10,7 @@ router.use((req, res, next) => {
 });
 
 router.post('/', createPost);
+router.get("/random", getRandomPosts);
 router.get('/:id', getPost);
 router.put('/:id', updatePost);
 router.delete("/:id", deletePost);
