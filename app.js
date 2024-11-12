@@ -48,9 +48,9 @@ async function startServer() {
    server.use('/api/news', authMiddleware, newsRoutes);
    server.use('/api/posts', authMiddleware, postRoutes);
    server.use('/api/user', authMiddleware, userRoutes);
-   server.use('/api/birds', authMiddleware, birdRoutes);
-   server.use('/api/departments', authMiddleware, departmentRoutes);
-   server.use('/api/municipalities/multiple', authMiddleware, municipalityRoutes);
+   server.use('/api/birds', birdRoutes);
+   server.use('/api/departments', departmentRoutes);
+   server.use('/api/municipalities', municipalityRoutes);
    
     // Ruta 404 para rutas no encontradas
     server.use((req, res) => {

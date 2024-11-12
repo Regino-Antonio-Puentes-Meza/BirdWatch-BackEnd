@@ -17,12 +17,12 @@ export async function login(req, res) {
 
         const user = await User.findOne({ correoElectronico });
         if (!user) {
-            return res.status(400).json({ message: message.EMAIL_NOT_FOUND });
+            return res.status(400).json({ message: 'Correo electrónico o contraseña incorrectos' });
         }
 
         const isMatch = await bcrypt.compare(contrasena, user.contrasena);
         if (!isMatch) {
-            return res.status(400).json({ message: message.INCORRECT_PASSWORD });
+            return res.status(400).json({ message: 'Correo electrónico o contraseña incorrectos' });
         }
 
         // Generar token JWT
