@@ -46,7 +46,7 @@ async function startServer() {
    // Rutas protegidas (requieren autenticación)
    server.use('/api/upload', authMiddleware, uploadRoutes);
    server.use('/api/news', authMiddleware, newsRoutes);
-   server.use('/api/posts', authMiddleware, postRoutes);
+   server.use('/api/posts', postRoutes);
    server.use('/api/user', authMiddleware, userRoutes);
    server.use('/api/birds', birdRoutes);
    server.use('/api/departments', departmentRoutes);

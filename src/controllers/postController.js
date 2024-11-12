@@ -22,10 +22,9 @@ export const createPost = async (req, res) => {
       sightingDate,
       camera,
       description,
-      image: `${host}:${port}/public/${image}`,
     });
 
-    // const savedPost = await newPost.save();
+    const savedPost = await newPost.save();
 
     res.status(201).json(savedPost);
     console.log("Datos recibidos en backend:", req.body);

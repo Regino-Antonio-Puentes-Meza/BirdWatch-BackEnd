@@ -9,13 +9,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'tuClaveSecretaJWT';
 export async function login(req, res) {
     try {
         const { correoElectronico, contrasena } = req.body;
-        try {
-        } catch (error) {
-            console.error(message.DATABASE_CONNECTION_ERROR, error);
-            return res.status(500).json({ error: message.DATABASE_CONNECTION_ERROR });
-        }
 
-        const user = await User.findOne({ correoElectronico });
+        // Convertir el correo electrónico a minúsculas
+        const correoElectronicoLowerCase = correoElectronico.toLowerCase();
+
+        const user = await User.findOne({ correoElectronico: correoElectronicoLowerCase });
         if (!user) {
             return res.status(400).json({ message: 'Correo electrónico o contraseña incorrectos' });
         }
@@ -34,16 +32,17 @@ export async function login(req, res) {
 
         // Devolver datos del usuario junto con el token
         return res.status(200).json({
-            message: message.LOGIN_SUCCESS,
+            message: 'Inicio de sesión exitoso',
             token,  // Devuelve el token al cliente
             user: {
                 nombre: user.nombre,
                 apellidos: user.apellidos,
                 usuario: user.usuario,
-                correoElectronico: user.correoElectronico,
-            },
+                correoElectronico: user.correoElectronico
+            }
         });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.error('Error al iniciar sesión:', error);
+        return res.status(500).json({ message: 'Error interno del servidor' });
     }
 }
