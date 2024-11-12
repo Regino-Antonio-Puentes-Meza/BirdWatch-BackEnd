@@ -1,6 +1,6 @@
 import express from 'express';
 import request from 'supertest';
-import birdRoutes from '../src/routes/birdsRoutes'; // Asegúrate de que la ruta sea correcta
+import birdRoutes from '../src/routes/birdsRoutes'; 
 import * as birdController from '../src/controllers/birdController';
 
 // Mock de los métodos del controlador

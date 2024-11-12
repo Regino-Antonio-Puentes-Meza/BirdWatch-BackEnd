@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
-import { sendEmail } from '../src/utils/emailService'; // Ajusta la ruta si es necesario
-
-jest.mock('nodemailer'); // Mock de nodemailer
+import { sendEmail } from '../src/utils/emailService'; 
+jest.mock('nodemailer');
 
 describe('Email Controller', () => {
     const mockTransporter = {

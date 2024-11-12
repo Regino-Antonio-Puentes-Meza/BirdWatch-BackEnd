@@ -4,8 +4,8 @@ import {
     deleteUser,
     followUser,
     UnFollowUser,
-  } from '../src/controllers/userController'; // Ajusta la ruta si es necesario
-  import UserModel from '../src/models/UserModel'; // Asegúrate de que la ruta sea correcta
+  } from '../src/controllers/userController'; 
+  import UserModel from '../src/models/UserModel'; 
   import bcrypt from 'bcrypt';
   
   jest.mock('../src/models/UserModel');

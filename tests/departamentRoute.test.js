@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
-import router from '../src/routes/location/departmentRoutes'; // Ajusta la ruta según tu estructura de archivos
-import { createDepartment, getDepartments } from '../src/controllers/location/departmentController'; // Asegúrate de que la ruta sea correcta
+import router from '../src/routes/location/departmentRoutes'; 
+import { createDepartment, getDepartments } from '../src/controllers/location/departmentController';
 
 // Mockear los controladores
 jest.mock('../src/controllers/location/departmentController', () => ({

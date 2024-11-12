@@ -1,6 +1,6 @@
-import { resetPassword } from '../src/controllers/resetPasswordController'; // Ajusta la ruta si es necesario
-import User from '../src/models/UserModel'; // Asegúrate de que la ruta sea correcta
-import dbConnect from '../src/config/dbConnect'; // Asegúrate de que la ruta sea correcta
+import { resetPassword } from '../src/controllers/resetPasswordController'; 
+import User from '../src/models/UserModel'; 
+import dbConnect from '../src/config/dbConnect'; 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -11,7 +11,7 @@ describe('Password Controller - Reset Password', () => {
     let req, res;
 
     beforeAll(() => {
-        process.env.JWT_SECRET = 'test_secret'; // Asegúrate de que esta variable esté configurada
+        process.env.JWT_SECRET = 'test_secret';
     });
 
     beforeEach(() => {

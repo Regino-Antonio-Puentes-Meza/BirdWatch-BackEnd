@@ -1,6 +1,6 @@
 import express from 'express';
 import request from 'supertest';
-import newsRoutes from '../src/routes/newsRoutes'; // Asegúrate de que la ruta sea correcta
+import newsRoutes from '../src/routes/newsRoutes'; 
 import * as newsController from '../src/controllers/newsController';
 
 // Mock de los métodos del controlador
@@ -8,11 +8,11 @@ jest.mock('../src/controllers/newsController');
 
 const app = express();
 app.use(express.json());
-app.use('/news', newsRoutes); // Usa el router que exportaste
+app.use('/news', newsRoutes); 
 
 describe('News Routes', () => {
     beforeEach(() => {
-        jest.clearAllMocks(); // Limpiar los mocks antes de cada prueba
+        jest.clearAllMocks(); 
     });
 
     it('should create a new news article', async () => {

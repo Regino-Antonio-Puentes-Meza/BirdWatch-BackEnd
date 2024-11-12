@@ -1,6 +1,6 @@
 import express from 'express';
 import request from 'supertest';
-import uploadRoutes from '../src/routes/uploadRoutes'; // Asegúrate de que la ruta sea correcta
+import uploadRoutes from '../src/routes/uploadRoutes'; 
 import uploadToAzure from '../src/middlewares/upload';
 
 // Mock del middleware de carga
@@ -8,7 +8,7 @@ jest.mock('../src/middlewares/upload');
 
 const app = express();
 app.use(express.json());
-app.use('/upload', uploadRoutes); // Usa el router que exportaste
+app.use('/upload', uploadRoutes); 
 
 describe('Upload Routes', () => {
     beforeEach(() => {
@@ -18,8 +18,7 @@ describe('Upload Routes', () => {
     it('should upload a file and return the image URL', async () => {
         const mockFileUrl = 'https://mock-url-to-azure.com/image.png';
         uploadToAzure.mockImplementation((req, res, next) => {
-            req.body.imageUrl = mockFileUrl; // Simular que se establece la URL de la imagen
-            next(); // Llamar a next() para pasar al siguiente middleware
+            req.body.imageUrl = mockFileUrl; 
         });
 
         const response = await request(app)

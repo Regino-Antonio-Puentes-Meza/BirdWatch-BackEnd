@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import authMiddleware from '../src/middlewares/authMiddleware'; // Ajusta la ruta si es necesario
+import authMiddleware from '../src/middlewares/authMiddleware';
 
-jest.mock('jsonwebtoken'); // Mock de jsonwebtoken
+jest.mock('jsonwebtoken');
 
 describe('Auth Middleware', () => {
     let req, res, next;
@@ -16,11 +16,11 @@ describe('Auth Middleware', () => {
             status: jest.fn().mockReturnThis(),
             json: jest.fn(),
         };
-        next = jest.fn(); // Simula la función next()
+        next = jest.fn(); 
     });
 
     afterEach(() => {
-        jest.clearAllMocks(); // Limpiar mocks después de cada prueba
+        jest.clearAllMocks();
     });
 
     it('should return 401 if no token is provided', async () => {

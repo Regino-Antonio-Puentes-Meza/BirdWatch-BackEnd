@@ -1,6 +1,6 @@
 import express from 'express';
 import request from 'supertest';
-import router from '../src/routes/authRoutes'; // Ajusta la ruta según tu estructura de archivos
+import router from '../src/routes/authRoutes'; 
 // Mockear los controladores
 jest.mock('../src/controllers/loginController', () => ({
     login: jest.fn((req, res) => res.status(200).json({ message: 'Login exitoso' })),

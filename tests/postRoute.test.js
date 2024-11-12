@@ -1,6 +1,6 @@
 import express from 'express';
 import request from 'supertest';
-import postRoutes from '../src/routes/postRoutes'; // Asegúrate de que la ruta sea correcta
+import postRoutes from '../src/routes/postRoutes'; 
 import * as postController from '../src/controllers/postController';
 
 // Mock de los métodos del controlador

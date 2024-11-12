@@ -1,11 +1,11 @@
-import { getMunicipalitiesByDepartment, createMultipleMunicipalities } from '../src/controllers/location/municipalityController'; // Ajusta la ruta si es necesario
-import Municipality from '../src/models/location/Municipality'; // Ajusta la ruta si es necesario
-import Department from '../src/models/location/Department'; // Ajusta la ruta si es necesario
-import dbConnect from '../src/config/dbConnect'; // Ajusta la ruta si es necesario
+// Ajusta la ruta si es necesario
+import Municipality from '../src/models/location/Municipality'; 
+import Department from '../src/models/location/Department';
+import dbConnect from '../src/config/dbConnect'; 
 
-jest.mock('../src/models/location/Municipality'); // Mock del modelo Municipality
-jest.mock('../src/models/location/Department'); // Mock del modelo Department
-jest.mock('../src/config/dbConnect'); // Mock de dbConnect
+jest.mock('../src/models/location/Municipality'); 
+jest.mock('../src/models/location/Department'); 
+jest.mock('../src/config/dbConnect'); 
 
 describe('Municipality Controller', () => {
     let req, res;

@@ -1,80 +1,81 @@
 import mongoose from 'mongoose';
-import dbConnect from '../src/config/dbConnect'; // Ajusta la ruta según tu estructura de carpetas
+import dotenv from 'dotenv';
+import dbConnect from '../src/config/dbConnect';
 
-jest.mock('mongoose'); // Mockear mongoose
+jest.mock('mongoose', () => ({
+    connect: jest.fn(),
+}));
+
+dotenv.config();
 
 describe('dbConnect', () => {
-
-    const MONGODB_URI = process.env.MONGODB_URI;
+    const originalConsoleError = console.error;
+    const originalConsoleLog = console.log;
 
     beforeAll(() => {
-        process.env.MONGODB_URI = MONGODB_URI; // Configura la variable de entorno
+        console.error = jest.fn();
+        console.log = jest.fn();
     });
 
-    afterEach(() => {
-        jest.clearAllMocks(); // Limpia los mocks después de cada prueba
+    afterAll(() => {
+        console.error = originalConsoleError;
+        console.log = originalConsoleLog;
     });
 
-    it('should connect to the database successfully', async () => {
-        const mockConnection = { connection: { readyState: 1 } }; // Simulación de una conexión exitosa
-        mongoose.connect.mockResolvedValue(mockConnection);
+    beforeEach(() => {
+        jest.clearAllMocks();
+        global.mongoose = { conn: null, promise: null }; // Reinicia el caché antes de cada prueba
+    });
+
+    it('should throw an error if MONGODB_URI is not defined', async () => {
+        delete process.env.MONGODB_URI; // Elimina la variable de entorno para esta prueba
+
+        await expect(dbConnect()).rejects.toThrow('Por favor, define la variable MONGODB_URI');
+    });
+
+    it('should connect to the database and return the connection', async () => {
+        process.env.MONGODB_URI = 'mongodb://localhost/test'; // Define una URI válida
+        mongoose.connect.mockResolvedValueOnce({}); // Simula una conexión exitosa
 
         const conn = await dbConnect();
 
-        expect(mongoose.connect).toHaveBeenCalledWith(MONGODB_URI);
-        expect(conn).toEqual(mockConnection); // Cambia toBe por toEqual para comparar objetos
+        expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGODB_URI);
+        expect(conn).toEqual({});
+        expect(console.log).toHaveBeenCalledWith('Conectando a la base de datos');
     });
 
-    it('should return cached connection if already connected', async () => {
-        const mockConnection = { connection: { readyState: 1 } };
-        global.mongoose = { conn: mockConnection, promise: null }; // Simular conexión existente
+    it('should return cached connection if it exists', async () => {
+        process.env.MONGODB_URI = 'mongodb://localhost/test';
+        const mockConnection = {};
+        global.mongoose.conn = mockConnection; // Simula una conexión ya establecida
 
         const conn = await dbConnect();
 
-        expect(conn).toEqual(mockConnection); // Verifica que se devuelva la conexión existente
-        expect(mongoose.connect).not.toHaveBeenCalled(); // No debe llamar a connect
-    });
-
-    it('should throw an error if connection fails', async () => {
-        const errorMessage = 'Error de conexión';
-        mongoose.connect.mockRejectedValue(new Error(errorMessage));
-
-        await expect(dbConnect()).rejects.toThrow(errorMessage);
-        expect(mongoose.connect).toHaveBeenCalledWith(MONGODB_URI);
+        expect(conn).toBe(mockConnection);
+        expect(mongoose.connect).not.toHaveBeenCalled(); // Asegúrate de que no se intente conectar nuevamente
     });
 
     it('should handle connection timeout error', async () => {
-        const error = { code: 'ETIMEOUT', message: 'Timeout error' };
-        mongoose.connect.mockRejectedValue(error);
-
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(); // Espiar console.error
-
-        await expect(dbConnect()).rejects.toThrow(error);
-
-        // Verificar que se haya llamado a mongoose.connect con el URI correcto
-        expect(mongoose.connect).toHaveBeenCalledWith(MONGODB_URI);
+        process.env.MONGODB_URI = 'mongodb://localhost/test';
         
-        // Verificar que se haya registrado el mensaje de error correcto
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Error de conexión: Tiempo de espera agotado.');
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Por favor, verifique que su IP pública esté configurada en MongoDB Atlas para permitir la conexión a la base de datos.');
+        // Simula un error con código ETIMEOUT
+        mongoose.connect.mockRejectedValueOnce({ code: 'ETIMEOUT' }); 
 
-        consoleErrorSpy.mockRestore(); // Restaurar la implementación original de console.error
+        await expect(dbConnect()).rejects.toThrow(); // Asegúrate de que se lance un error
+
+        expect(console.error).toHaveBeenCalledWith('Error de conexión: Tiempo de espera agotado.');
+        expect(console.error).toHaveBeenCalledWith('Por favor, verifique que su IP pública esté configurada en MongoDB Atlas para permitir la conexión a la base de datos.');
     });
 
-    it('should log error message for other connection errors', async () => {
-        const error = { code: 'ECONNREFUSED', message: 'Connection refused' };
-        mongoose.connect.mockRejectedValue(error);
-
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(); // Espiar console.error
-
-        await expect(dbConnect()).rejects.toThrow(error);
-
-        // Verificar que se haya llamado a mongoose.connect con el URI correcto
-        expect(mongoose.connect).toHaveBeenCalledWith(MONGODB_URI);
+    it('should handle general connection errors', async () => {
+        process.env.MONGODB_URI = 'mongodb://localhost/test';
         
-        // Verificar que se haya registrado el mensaje de error correcto
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Error al conectar con la base de datos:', error.message);
+        // Simula un error genérico
+        const errorMessage = 'Connection failed';
+        mongoose.connect.mockRejectedValueOnce(new Error(errorMessage)); 
 
-        consoleErrorSpy.mockRestore(); // Restaurar la implementación original de console.error
+        await expect(dbConnect()).rejects.toThrow(errorMessage); // Verifica que se lance el error
+
+        expect(console.error).toHaveBeenCalledWith('Error al conectar con la base de datos:', errorMessage);
     });
 });

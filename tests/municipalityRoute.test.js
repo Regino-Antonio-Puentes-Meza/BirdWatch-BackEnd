@@ -1,8 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 import router from '../src/routes/location/municipalityRoutes'; 
-import { getMunicipalitiesByDepartment, createMultipleMunicipalities } from '../src/controllers/location/municipalityController'; // Asegúrate de que la ruta sea correcta
-
+import { getMunicipalitiesByDepartment, createMultipleMunicipalities } from '../src/controllers/location/municipalityController';
 // Mockear los controladores
 jest.mock('../src/controllers/location/municipalityController.js', () => ({
     getMunicipalitiesByDepartment: jest.fn((req, res) => {
