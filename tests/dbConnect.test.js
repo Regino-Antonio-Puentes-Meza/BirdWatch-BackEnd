@@ -58,10 +58,12 @@ describe('dbConnect', () => {
     it('should handle connection timeout error', async () => {
         process.env.MONGODB_URI = 'mongodb://localhost/test';
         
-        // Simula un error con código ETIMEOUT
-        mongoose.connect.mockRejectedValueOnce({ code: 'ETIMEOUT' }); 
+        // Simula un error con código ETIMEOUT como instancia de Error
+        const timeoutError = new Error('Connection timed out');
+        timeoutError.code = 'ETIMEOUT'; // Agrega la propiedad code al error
+        mongoose.connect.mockRejectedValueOnce(timeoutError); 
 
-        await expect(dbConnect()).rejects.toThrow(); // Asegúrate de que se lance un error
+        await expect(dbConnect()).rejects.toThrow('Connection timed out'); // Asegúrate de que se lance un error
 
         expect(console.error).toHaveBeenCalledWith('Error de conexión: Tiempo de espera agotado.');
         expect(console.error).toHaveBeenCalledWith('Por favor, verifique que su IP pública esté configurada en MongoDB Atlas para permitir la conexión a la base de datos.');
