@@ -63,18 +63,46 @@ export const updatePost = async (req, res) => {
   }
 };
 
-// Obtener publicaciones aleatorias para el feed
 export const getRandomPosts = async (req, res) => {
-  const numberOfPosts = parseInt(req.query.limit) || 10; // Puedes definir el límite de publicaciones que quieres obtener al azar
+  const numberOfPosts = parseInt(req.query.limit) || 10; // Límite de publicaciones a obtener
+  const prioritizeNew = Math.random() < 0.5; // 50% de probabilidad de priorizar las publicaciones más nuevas
 
   try {
-    const posts = await Post.aggregate([
-      { $sample: { size: numberOfPosts } } // Selecciona `numberOfPosts` publicaciones aleatorias
-    ]);
+    let posts;
+
+    if (prioritizeNew) {
+      // Priorizar las publicaciones más recientes
+      posts = await Post.aggregate([
+        { $sort: { sightingDate: -1 } }, // Ordenar por fecha de creación (más recientes primero)
+        { $limit: numberOfPosts }    // Limitar el número de publicaciones
+      ]);
+    } else {
+      // Seleccionar publicaciones completamente al azar
+      posts = await Post.aggregate([
+        { $sample: { size: numberOfPosts } } // Seleccionar publicaciones aleatorias
+      ]);
+    }
 
     res.status(200).json(posts);
   } catch (error) {
     handleError(res, error, "Error al obtener las publicaciones aleatorias");
+  }
+};
+
+export const getPostsByDate = async (req, res) => {
+  const numberOfPosts = parseInt(req.query.limit) || 10; // Límite de publicaciones a obtener
+
+  try {
+    await dbConnect();
+
+    // Obtener publicaciones ordenadas por fecha de creación (más recientes primero)
+    const posts = await Post.find()
+      .sort({ sightingDate: -1 }) // Ordenar por fecha de creación en orden descendente
+      .limit(numberOfPosts);   // Limitar el número de publicaciones
+
+    res.status(200).json(posts);
+  } catch (error) {
+    handleError(res, error, "Error al obtener las publicaciones ordenadas por fecha");
   }
 };
 
