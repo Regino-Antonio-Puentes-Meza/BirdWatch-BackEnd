@@ -90,22 +90,24 @@ export const getRandomPosts = async (req, res) => {
 };
 
 export const getPostsByDate = async (req, res) => {
-  const numberOfPosts = parseInt(req.query.limit) || 10; // Límite de publicaciones a obtener
+  const userId = req.query.userId; // ID del usuario actual (puedes pasarlo como query o token)
 
   try {
-    await dbConnect();
+    const posts = await Post.find().sort({ sightingDate: -1 });
 
-    // Obtener publicaciones ordenadas por fecha de creación (más recientes primero)
-    const posts = await Post.find()
-      .sort({ sightingDate: -1 }) // Ordenar por fecha de creación en orden descendente
-      .limit(numberOfPosts);   // Limitar el número de publicaciones
+    const formattedPosts = posts.map((post) => ({
+      ...post.toObject(),
+      comments: post.comments || [], // Asegúrate de que comments sea un array
+      likes: post.likes.length, // Número total de likes
+      likedByUser: post.likes.includes(userId), // Verifica si el usuario actual ya dio like
+    }));
 
-    res.status(200).json(posts);
+    res.status(200).json(formattedPosts);
   } catch (error) {
-    handleError(res, error, "Error al obtener las publicaciones ordenadas por fecha");
+    console.error("Error al obtener las publicaciones:", error);
+    res.status(500).json({ message: "Error al obtener las publicaciones" });
   }
 };
-
 
 // Delete a post
 export const deletePost = async (req, res) => {
@@ -126,20 +128,35 @@ export const deletePost = async (req, res) => {
 };
 
 export const likePost = async (req, res) => {
-  const id = req.params.id;
-  const { userId } = req.body;
+  const { id } = req.params; // ID del post
+  const { userId } = req.body; // ID del usuario que da el like
 
   try {
-    const post = await Post.findById(id);
-    if (!post.likes.includes(userId)) {
-      await post.updateOne({ $push: { likes: userId } });
-      res.status(200).json("Post liked");
-    } else {
-      await post.updateOne({ $pull: { likes: userId } });
-      res.status(200).json("Post Unliked");
-    }
+      const post = await Post.findById(id);
+
+      if (!post) {
+          return res.status(404).json({ message: "Publicación no encontrada" });
+      }
+
+      let liked = false;
+
+      // Verificar si el usuario ya dio like
+      if (!post.likes.includes(userId)) {
+          post.likes.push(userId);
+          liked = true;
+      } else {
+          post.likes = post.likes.filter((id) => id !== userId);
+      }
+
+      await post.save();
+
+      res.status(200).json({
+          likes: post.likes.length,
+          liked,
+      });
   } catch (error) {
-    handleError(res, error, "Error al dar like/unlike al post");
+      console.error("Error al dar like/unlike al post:", error);
+      res.status(500).json({ message: "Error al manejar el like" });
   }
 };
 

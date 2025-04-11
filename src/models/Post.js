@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 const postSchema = new mongoose.Schema(
   {
     userHandle: { 
@@ -29,13 +28,16 @@ const postSchema = new mongoose.Schema(
     image: {
       type: String,
       required: false
+    },
+    likes: {
+      type: [String], // Array de IDs de usuarios que dieron "like"
+      default: [], // Por defecto, no tiene likes
     }
   },
   {
     timestamps: true, // Crea automáticamente createdAt y updatedAt
   }
 );
-
 
 const Post = mongoose.model('Post', postSchema);
 
