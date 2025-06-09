@@ -3,6 +3,7 @@ import dbConnect from '../config/dbConnect.js';
 import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import { registerSchema } from '../validation/registerSchema.js';
+import messages from '@/utils/messages.js';
 
 // Clave secreta para firmar el token
 const JWT_SECRET = process.env.JWT_SECRET || 'tuClaveSecretaJWT';
@@ -17,8 +18,8 @@ export async function register(req, res) {
         const userExists = await User.findOne({ $or: [{ correoElectronico }, { usuario }] });
         if (userExists) {
             let message = userExists.correoElectronico === correoElectronico
-                ? 'El correo ya está registrado'
-                : 'El usuario ya está registrado';
+                ? messages.EMAIL_ALREADY_REGISTERED
+                : messages.USERNAME_ALREADY_REGISTERED;
             return res.status(400).json({ message });
         }
 

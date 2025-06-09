@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Post from "../models/Post.js";
 import UserModel from "../models/UserModel.js";
 import dbConnect from '../config/dbConnect.js';
+import messages from "@/utils/messages.js";
 
 const handleError = (res, error, message = 'Error en la operación') => {
   console.error(message, error);
@@ -30,7 +31,7 @@ export const createPost = async (req, res) => {
     res.status(201).json(savedPost);
     console.log("Datos recibidos en backend:", req.body);
   } catch (error) {
-    handleError(res, error, "Error al crear el post");
+    handleError(res, error, messages.POST_CREATE_ERROR);
   }
 };
 
@@ -39,9 +40,9 @@ export const getPost = async (req, res) => {
 
   try {
     const post = await Post.findById(id).populate('userId', 'nombre usuario');
-    post ? res.status(200).json(post) : res.status(404).json({ message: 'Publicación no encontrada' });
+    post ? res.status(200).json(post) : res.status(404).json({ error: messages.POST_NOT_FOUND });
   } catch (error) {
-    handleError(res, error, "Error al obtener el post");
+    handleError(res, error, messages.POST_GET_ERROR);
   }
 };
 
@@ -59,7 +60,7 @@ export const updatePost = async (req, res) => {
       res.status(403).json("Action forbidden");
     }
   } catch (error) {
-    handleError(res, error, "Error al actualizar el post");
+    handleError(res, error, messages.POST_UPDATE_ERROR);
   }
 };
 
@@ -85,7 +86,7 @@ export const getRandomPosts = async (req, res) => {
 
     res.status(200).json(posts);
   } catch (error) {
-    handleError(res, error, "Error al obtener las publicaciones aleatorias");
+    handleError(res, error, messages.RANDOM_POSTS_ERROR);
   }
 };
 
@@ -104,8 +105,8 @@ export const getPostsByDate = async (req, res) => {
 
     res.status(200).json(formattedPosts);
   } catch (error) {
-    console.error("Error al obtener las publicaciones:", error);
-    res.status(500).json({ message: "Error al obtener las publicaciones" });
+    console.error(messages.POSTS_FETCH_ERROR, error);
+    res.status(500).json({ error: messages.POSTS_FETCH_ERROR});
   }
 };
 
@@ -120,10 +121,10 @@ export const deletePost = async (req, res) => {
       await post.deleteOne();
       res.status(200).json("POst deleted successfully");
     } else {
-      res.status(403).json("Action forbidden");
+      res.status(403).json(messages.ACTION_FORBIDDEN);
     }
   } catch (error) {
-    handleError(res, error, "Error al eliminar el post");
+    handleError(res, error, messages.POST_DELETE_ERROR);
   }
 };
 
@@ -135,7 +136,7 @@ export const likePost = async (req, res) => {
       const post = await Post.findById(id);
 
       if (!post) {
-          return res.status(404).json({ message: "Publicación no encontrada" });
+          return res.status(404).json({ error: messages.POSTS_FETCH_ERROR});
       }
 
       let liked = false;
@@ -155,8 +156,8 @@ export const likePost = async (req, res) => {
           liked,
       });
   } catch (error) {
-      console.error("Error al dar like/unlike al post:", error);
-      res.status(500).json({ message: "Error al manejar el like" });
+      console.error(messages.LIKE_HANDLE_ERROR, error);
+      res.status(500).json({ error: messages.LIKE_HANDLE_ERROR});
   }
 };
 
@@ -198,6 +199,6 @@ export const getTimelinePosts = async (req, res) => {
       })
       );
   } catch (error) {
-    handleError(res, error, "Error al obtener la línea de tiempo de publicaciones");
+    handleError(res, error, messages.TIMELINE_POSTS_ERROR);
   }
 };

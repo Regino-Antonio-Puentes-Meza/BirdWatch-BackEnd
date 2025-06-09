@@ -1,12 +1,12 @@
 import NewsModel from '../models/News.js';
-
+import messages from '@/utils/messages.js';
 // Crear una nueva noticia
 export const createNews = async (req, res) => {
     const newNews = new NewsModel(req.body);
 
     try {
         await newNews.save();
-        res.status(200).json("Noticia creada con exito!");
+        res.status(200).json(messages.NEWS_CREATED);
     } catch (error) {
         res.status(500).json(error);
     }
@@ -54,7 +54,7 @@ export const deleteNews = async (req, res) => {
 
     try {
         await NewsModel.findByIdAndDelete(id);
-        res.status(200).json("Noticia eliminada con exito!");
+        res.status(200).json(messages.NEWS_DELETED);
     } catch (error) {
         res.status(500).json(error);
     }
