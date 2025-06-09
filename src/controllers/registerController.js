@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import dbConnect from '../config/dbConnect.js';
 import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import { registerSchema } from '../validation/registerSchema.js';
@@ -18,8 +17,8 @@ export async function register(req, res) {
         const userExists = await User.findOne({ $or: [{ correoElectronico }, { usuario }] });
         if (userExists) {
             let message = userExists.correoElectronico === correoElectronico
-                ? messages.EMAIL_ALREADY_REGISTERED
-                : messages.USERNAME_ALREADY_REGISTERED;
+                ? messages.REGISTER.EMAIL_ALREADY_REGISTERED
+                : messages.REGISTER.USERNAME_ALREADY_REGISTERED;
             return res.status(400).json({ message });
         }
 
@@ -35,7 +34,7 @@ export async function register(req, res) {
         );
 
         return res.status(201).json({
-            message: 'Usuario creado exitosamente',
+            message: messages.REGISTER.USER_CREATED_SUCCESSFULLY,
             token,  // Devuelve el token al cliente
             user: {
                 nombre: newUser.nombre,

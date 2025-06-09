@@ -1,4 +1,9 @@
 const _messages = {
+    REGISTER: {
+        EMAIL_ALREADY_REGISTERED: "El correo ya está registrado",
+        USERNAME_ALREADY_REGISTERED: "El usuario ya está registrado",
+        USER_CREATED_SUCCESSFULLY: "Usuario creado exitosamente"
+    },
     DATABASE_CONNECTION_ERROR: "Error al conectar a la base de datos",
     EMAIL_NOT_FOUND: "Correo electrónico incorrecto o no registrado",
     INCORRECT_PASSWORD: "Contraseña incorrecta",
@@ -18,7 +23,6 @@ const _messages = {
     INVALID_CREDENTIALS: "Correo electrónico o contraseña incorrectos",
     LOGIN_ERROR: "Error al iniciar sesión",
     INTERNAL_SERVER_ERROR: "Error interno del servidor",
-    ///
     NEWS_CREATED: "Noticia creada con éxito",
     NEWS_DELETED: "Noticia eliminada con éxito",
     POST_CREATE_ERROR: "Error al crear el post",
@@ -30,16 +34,10 @@ const _messages = {
     POSTS_FETCH_ERROR: "Error al obtener las publicaciones",
     LIKE_HANDLE_ERROR: "Error al manejar el like",
     TIMELINE_POSTS_ERROR: "Error al obtener la línea de tiempo de publicaciones",
-    //
-    EMAIL_ALREADY_REGISTERED: "El correo ya está registrado",
-    USERNAME_ALREADY_REGISTERED: "El usuario ya está registrado",
-    //
     TOKEN_EXPIRED: "El token ha expirado",
     ACCESS_DENIED_UPDATE_PROFILE: "Acceso denegado. Solo puedes actualizar tu propio perfil",
     ACTION_FORBIDDEN: "Acción prohibida",
     USER_ALREADY_FOLLOWED: "Ya sigues a este usuario",
     USER_FOLLOWED: "Usuario seguido!",
-
-    
 };
 export {_messages as default}
