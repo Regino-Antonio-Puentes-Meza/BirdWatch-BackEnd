@@ -29,10 +29,9 @@ export const createPost = async (req, res) => {
     const savedPost = await newPost.save();
 
     res.status(201).json(savedPost);
-    console.log("Datos recibidos en backend:", req.body);
+    console.log(messages.SERVER.DATA_RECEIVED_BACKEND, req.body); 
   } catch (error) {
-    handleError(res, error, messages.POST_CREATE_ERROR);
-  }
+    handleError(res, error, messages.POST.POST_CREATE_ERROR); }
 };
 
 export const getPost = async (req, res) => {
@@ -40,9 +39,9 @@ export const getPost = async (req, res) => {
 
   try {
     const post = await Post.findById(id).populate('userId', 'nombre usuario');
-    post ? res.status(200).json(post) : res.status(404).json({ error: messages.POST_NOT_FOUND });
+    post ? res.status(200).json(post) : res.status(404).json({ error: messages.POST.POST_NOT_FOUND }); 
   } catch (error) {
-    handleError(res, error, messages.POST_GET_ERROR);
+    handleError(res, error, messages.POST.POST_GET_ERROR); 
   }
 };
 
@@ -55,12 +54,12 @@ export const updatePost = async (req, res) => {
     const post = await Post.findById(postId);
     if (post.userId.equals(userId)) {
       await post.updateOne({ $set: req.body });
-      res.status(200).json("Post Updated");
+      res.status(200).json(messages.POST.POST_UPDATED); 
     } else {
-      res.status(403).json("Action forbidden");
+      res.status(403).json(messages.USER.ACTION_FORBIDDEN); 
     }
   } catch (error) {
-    handleError(res, error, messages.POST_UPDATE_ERROR);
+    handleError(res, error, messages.POST.POST_UPDATE_ERROR); 
   }
 };
 
@@ -75,7 +74,7 @@ export const getRandomPosts = async (req, res) => {
       // Priorizar las publicaciones más recientes
       posts = await Post.aggregate([
         { $sort: { sightingDate: -1 } }, // Ordenar por fecha de creación (más recientes primero)
-        { $limit: numberOfPosts }    // Limitar el número de publicaciones
+        { $limit: numberOfPosts }       // Limitar el número de publicaciones
       ]);
     } else {
       // Seleccionar publicaciones completamente al azar
@@ -86,7 +85,7 @@ export const getRandomPosts = async (req, res) => {
 
     res.status(200).json(posts);
   } catch (error) {
-    handleError(res, error, messages.RANDOM_POSTS_ERROR);
+    handleError(res, error, messages.POST.RANDOM_POSTS_ERROR); 
   }
 };
 
@@ -105,8 +104,8 @@ export const getPostsByDate = async (req, res) => {
 
     res.status(200).json(formattedPosts);
   } catch (error) {
-    console.error(messages.POSTS_FETCH_ERROR, error);
-    res.status(500).json({ error: messages.POSTS_FETCH_ERROR});
+    console.error(messages.POST.POSTS_FETCH_ERROR, error); 
+    res.status(500).json({ error: messages.POST.POSTS_FETCH_ERROR }); 
   }
 };
 
@@ -119,12 +118,12 @@ export const deletePost = async (req, res) => {
     const post = await Post.findById(id);
     if (post.userId.equals(userId)) {
       await post.deleteOne();
-      res.status(200).json("POst deleted successfully");
+      res.status(200).json(messages.POST.POST_DELETED); 
     } else {
-      res.status(403).json(messages.ACTION_FORBIDDEN);
+      res.status(403).json(messages.USER.ACTION_FORBIDDEN); 
     }
   } catch (error) {
-    handleError(res, error, messages.POST_DELETE_ERROR);
+    handleError(res, error, messages.POST.POST_DELETE_ERROR); 
   }
 };
 
@@ -136,7 +135,7 @@ export const likePost = async (req, res) => {
       const post = await Post.findById(id);
 
       if (!post) {
-          return res.status(404).json({ error: messages.POSTS_FETCH_ERROR});
+          return res.status(404).json({ error: messages.POST.POSTS_FETCH_ERROR }); 
       }
 
       let liked = false;
@@ -156,8 +155,8 @@ export const likePost = async (req, res) => {
           liked,
       });
   } catch (error) {
-      console.error(messages.LIKE_HANDLE_ERROR, error);
-      res.status(500).json({ error: messages.LIKE_HANDLE_ERROR});
+      console.error(messages.POST.LIKE_HANDLE_ERROR, error); 
+      res.status(500).json({ error: messages.POST.LIKE_HANDLE_ERROR }); 
   }
 };
 
@@ -166,7 +165,7 @@ export const getTimelinePosts = async (req, res) => {
   const userId = req.params.id;
 
   try {
-    const currentUserPosts = await PostModel.find({ userId: userId });
+    const currentUserPosts = await Post.find({ userId: userId });
     const followingPosts = await UserModel.aggregate([
       {
         $match: { _id: new mongoose.Types.ObjectId(userId) },
@@ -199,6 +198,6 @@ export const getTimelinePosts = async (req, res) => {
       })
       );
   } catch (error) {
-    handleError(res, error, messages.TIMELINE_POSTS_ERROR);
+    handleError(res, error, messages.POST.TIMELINE_POSTS_ERROR); 
   }
 };

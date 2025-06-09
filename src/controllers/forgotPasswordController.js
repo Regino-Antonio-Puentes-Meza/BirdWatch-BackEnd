@@ -2,7 +2,7 @@ import dbConnect from '../config/dbConnect.js';
 import User from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/emailService.js'; // Importa el servicio de envío de correos
-import messages from '@/utils/messages.js';
+import messages from '@/utils/messages.js'; 
 
 //Recuperar contraseña
 export async function forgotPassword(req, res) {
@@ -13,13 +13,13 @@ export async function forgotPassword(req, res) {
 
         const user = await User.findOne({ correoElectronico });
         if (!user) {
-            return res.status(400).json({ error: messages.USER_NOT_FOUND  });
+            return res.status(400).json({ error: messages.USER.USER_NOT_FOUND }); 
         }
 
         // Generar el token de recuperación de contraseña válido por 15 minutos
         const resetToken = jwt.sign(
             { id: user.id },
-            process.env.JWT_SECRET, 
+            process.env.JWT_SECRET,
             { expiresIn: '15m' } // Token válido por 15 minutos
         );
 
@@ -34,9 +34,9 @@ export async function forgotPassword(req, res) {
         // Llamar a la función `sendEmail` para enviar el correo
         await sendEmail(correoElectronico, subject, text, html);
 
-        return res.status(200).json({ error: messages.PASSWORD_RESET_LINK});
+        return res.status(200).json({ error: messages.PASSWORD_RESET.PASSWORD_RESET_LINK }); 
     } catch (error) {
-        console.error(messages.PASSWORD_RECOVERY_ERROR);
-        return res.status(500).json({ error: messages.PASSWORD_RECOVERY_ERROR });
+        console.error(messages.PASSWORD_RESET.PASSWORD_RECOVERY_ERROR, error); 
+        return res.status(500).json({ error: messages.PASSWORD_RESET.PASSWORD_RECOVERY_ERROR }); 
     }
 }

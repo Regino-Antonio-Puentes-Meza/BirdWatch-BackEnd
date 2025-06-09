@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import messages from './messages.js'; // Asegúrate que esta ruta sea correcta
 
 export const sendEmail = async (to, subject, text, html) => {
     try {
@@ -24,7 +25,7 @@ export const sendEmail = async (to, subject, text, html) => {
         await transporter.sendMail(mailOptions);
         console.log(`Correo enviado a ${to}`);
     } catch (error) {
-        console.error('Error al enviar correo:', error);
+        console.error(messages.EMAIL_SERVICE.EMAIL_SEND_ERROR, error); 
         throw error;
     }
 };
