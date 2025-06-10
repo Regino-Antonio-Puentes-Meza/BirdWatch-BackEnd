@@ -21,6 +21,6 @@ const birdSchema = new mongoose.Schema({
 
 
 
-const birdsModel = mongoose.model('Bird', birdSchema);
+const birdsModel = mongoose.models.Bird || mongoose.model('Bird', birdSchema);
 
 export default birdsModel;

@@ -3,7 +3,6 @@ import User from '../../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import messages from '../../utils/messages.js';
-import dbConnect from '../../config/dbConnect.js';
 
 jest.mock('../../models/UserModel.js');
 jest.mock('jsonwebtoken');

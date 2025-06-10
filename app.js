@@ -10,6 +10,7 @@ import birdRoutes from './src/routes/birdsRoutes.js';
 import departmentRoutes from './src/routes/location/departmentRoutes.js';
 import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
 import authMiddleware from './src/middlewares/authMiddleware.js';
+import dbConnect from './src/config/dbConnect.js';
 
 dotenv.config();
 
@@ -33,10 +34,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rutas públicas
+// Rutas
 app.use('/api/auth', authRoutes);
-
-// Rutas protegidas
 app.use('/api/upload', authMiddleware, uploadRoutes);
 app.use('/api/news', authMiddleware, newsRoutes);
 app.use('/api/posts', postRoutes);
@@ -49,5 +48,19 @@ app.use('/api/municipalities', municipalityRoutes);
 app.use((req, res) => {
   res.status(404).json({ message: 'Ruta no encontrada' });
 });
+
+// Iniciar el servidor solo si no está en entorno de pruebas
+// if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 3000;
+
+  dbConnect().then(() => {
+    console.log('Conexión a la base de datos establecida');
+    app.listen(PORT, () => {
+      console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    });
+  }).catch((error) => {
+    console.error('Error al conectar la base de datos:', error.message);
+  });
+// }
 
 export default app;

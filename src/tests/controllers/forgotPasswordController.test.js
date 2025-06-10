@@ -2,9 +2,7 @@ import { forgotPassword } from '../../controllers/forgotPasswordController.js';
 import User from '../../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../../utils/emailService.js';
-import dbConnect from '../../config/dbConnect.js';
 import messages from '../../utils/messages.js';
-
 jest.mock('../../models/UserModel.js');
 jest.mock('jsonwebtoken');
 jest.mock('../../utils/emailService.js');

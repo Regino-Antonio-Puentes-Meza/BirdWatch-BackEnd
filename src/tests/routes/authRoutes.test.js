@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../../app.js'; // Asegúrate de que app.js exporte el objeto Express
+import app from '../../../app.js';
 
 jest.mock('../../config/dbConnect.js', () => jest.fn());
 

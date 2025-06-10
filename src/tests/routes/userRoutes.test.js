@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../../app.js';// Asegúrate que este archivo exporte el servidor Express
+import app from '../../../app.js';
 import User from 'src/models/UserModel.js';
 
 jest.mock('../../models/UserModel.js');

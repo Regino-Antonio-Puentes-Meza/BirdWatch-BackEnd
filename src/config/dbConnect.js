@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import messages from '@/utils/messages.js'; 
+import messages from '../utils/messages.js'; 
 dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI;

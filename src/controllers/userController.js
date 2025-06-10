@@ -1,5 +1,4 @@
-//userController.js
-import messages from "@/utils/messages.js";
+import messages from "../utils/messages.js";
 import UserModel from "../models/UserModel.js";
 import bcrypt from "bcrypt";
 

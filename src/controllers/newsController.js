@@ -1,5 +1,5 @@
 import NewsModel from '../models/News.js';
-import messages from '@/utils/messages.js'; 
+import messages from '../utils/messages.js'; 
 
 // Crear una nueva noticia
 export const createNews = async (req, res) => {
