@@ -1,11 +1,10 @@
-// controllers/municipalityController.js
 import Municipality from '../../models/location/Municipality.js';
 import Department from '../../models/location/Department.js';
 import dbConnect from '../../config/dbConnect.js';
 import messages from '../../utils/messages.js';
 
 export const getMunicipalitiesByDepartment = async (req, res) => {
-  const departmentId = parseInt(req.params.departmentId, 10); // Asegúrate de que se esté convirtiendo correctamente
+  const departmentId = parseInt(req.params.departmentId, 10);
 
     if (isNaN(departmentId)) {
         return res.status(400).json({ error: messages.LOCATION.MUNICIPALITY.INVALID_MUNICIPALITY_ID });

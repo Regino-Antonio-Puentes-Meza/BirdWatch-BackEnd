@@ -36,6 +36,14 @@ describe('User Controller', () => {
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ error: messages.USER.USER_NOT_FOUND });
     });
+
+    it('debe manejar errores inesperados en getUser', async () => {
+      UserModel.findById.mockRejectedValue(new Error('DB error'));
+
+      await userController.getUser(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+    });
   });
 
   describe('updateUser', () => {
@@ -109,12 +117,16 @@ describe('User Controller', () => {
       expect(res.json).toHaveBeenCalledWith(messages.USER.USER_FOLLOWED);
     });
 
-    it('debe rechazar si ya lo sigue', async () => {
+    it('debe rechazar si ya lo sigue (ambas llamadas mockeadas)', async () => {
       req.body.currentUserId = 'user123';
       req.params.id = 'user456';
 
-      const followUser = { followers: ['user123'] };
-      UserModel.findById.mockResolvedValue(followUser);
+      const followUser = { followers: ['user123'], updateOne: jest.fn() };
+      const followingUser = { updateOne: jest.fn() };
+
+      UserModel.findById
+        .mockResolvedValueOnce(followUser)
+        .mockResolvedValueOnce(followingUser);
 
       await userController.followUser(req, res);
 
@@ -153,12 +165,16 @@ describe('User Controller', () => {
       expect(res.json).toHaveBeenCalledWith(messages.USER.USER_UNFOLLOWED);
     });
 
-    it('debe rechazar si no lo seguía', async () => {
+    it('debe rechazar si no lo seguía (ambas llamadas mockeadas)', async () => {
       req.body.currentUserId = 'user123';
       req.params.id = 'user456';
 
-      const followUser = { followers: [] };
-      UserModel.findById.mockResolvedValue(followUser);
+      const followUser = { followers: [], updateOne: jest.fn() };
+      const followingUser = { updateOne: jest.fn() };
+
+      UserModel.findById
+        .mockResolvedValueOnce(followUser)
+        .mockResolvedValueOnce(followingUser);
 
       await userController.UnFollowUser(req, res);
 
