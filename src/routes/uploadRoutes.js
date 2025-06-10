@@ -1,6 +1,6 @@
 import express from 'express';
 import uploadToAzure from '../middlewares/upload.js';
-import messages from '@/utils/messages.js'; // Asegúrate que esta ruta sea correcta
+import messages from '../utils/messages.js'; // Asegúrate que esta ruta sea correcta
 const router = express.Router();
 
 // Middleware para registrar las solicitudes

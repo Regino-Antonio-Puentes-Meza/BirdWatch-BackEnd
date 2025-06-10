@@ -2,7 +2,7 @@ import dbConnect from '../config/dbConnect.js';
 import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import messages from '@/utils/messages.js'; 
+import messages from '../utils/messages.js'; 
 
 // Restablecer la contraseña
 export async function resetPassword(req, res) {

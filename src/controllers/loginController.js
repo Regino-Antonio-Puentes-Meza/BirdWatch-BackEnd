@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
-import messages from '@/utils/messages.js'; 
+import messages from '../utils/messages.js'; 
 
 // Clave secreta para firmar el token (asegúrate de definir esta variable en tus variables de entorno)
 const JWT_SECRET = process.env.JWT_SECRET || 'tuClaveSecretaJWT';

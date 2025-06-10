@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import { registerSchema } from '../validation/registerSchema.js';
-import messages from '@/utils/messages.js'; 
+import messages from '../utils/messages.js';
 
 // Clave secreta para firmar el token
 const JWT_SECRET = process.env.JWT_SECRET || 'tuClaveSecretaJWT';
@@ -14,12 +14,15 @@ export async function register(req, res) {
         // Validar datos
         await registerSchema.validate(body);
         const { nombre, apellidos, usuario, isOrnitologo, correoElectronico, contrasena } = body;
-        const userExists = await User.findOne({ $or: [{ correoElectronico }, { usuario }] });
-        if (userExists) {
-            let message = userExists.correoElectronico === correoElectronico
-                ? messages.EMAIL_ALREADY_REGISTERED
-                : messages.USERNAME_ALREADY_REGISTERED;
-            return res.status(400).json({ message });
+
+        const emailTaken = await User.findOne({ correoElectronico });
+        if (emailTaken) {
+            return res.status(400).json({ message: messages.AUTH.EMAIL_ALREADY_REGISTERED });
+        }
+
+        const usernameTaken = await User.findOne({ usuario });
+        if (usernameTaken) {
+            return res.status(400).json({ message: messages.AUTH.USERNAME_ALREADY_REGISTERED });
         }
 
         const hashedPassword = await bcrypt.hash(contrasena, 10);
@@ -34,7 +37,7 @@ export async function register(req, res) {
         );
 
         return res.status(201).json({
-            message: 'Usuario creado exitosamente',
+            message: messages.USER.USER_CREATED,
             token,  // Devuelve el token al cliente
             user: {
                 nombre: newUser.nombre,

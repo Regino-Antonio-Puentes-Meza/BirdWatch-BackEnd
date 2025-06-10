@@ -1,6 +1,5 @@
-import dbConnect from '../config/dbConnect.js';
 import Bird from "../models/Bird.js";
-import messages from '@/utils/messages.js'; 
+import messages from '../utils/messages.js'; 
 
 // Crear una nueva especie de ave
 export const createBird = async (req, res) => {

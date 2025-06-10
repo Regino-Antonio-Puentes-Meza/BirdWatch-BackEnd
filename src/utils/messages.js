@@ -87,7 +87,7 @@ const _messages = {
             DEPARTMENT_NOT_FOUND: "El departamento no existe", 
         },
         MUNICIPALITY: {
-            INVALID_DEPARTMENT_ID: "Invalid department ID",
+            INVALID_MUNICIPALITY_ID: "ID de Municipio no válido",
             GET_MUNICIPALITIES_ERROR: "Error al obtener los municipios",
             MUNICIPALITIES_CREATED_SUCCESS: "Municipios creados exitosamente",
         }

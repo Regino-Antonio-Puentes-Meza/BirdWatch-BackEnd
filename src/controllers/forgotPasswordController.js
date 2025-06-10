@@ -2,7 +2,7 @@ import dbConnect from '../config/dbConnect.js';
 import User from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/emailService.js'; // Importa el servicio de envío de correos
-import messages from '@/utils/messages.js'; 
+import messages from '../utils/messages.js'; 
 
 //Recuperar contraseña
 export async function forgotPassword(req, res) {
