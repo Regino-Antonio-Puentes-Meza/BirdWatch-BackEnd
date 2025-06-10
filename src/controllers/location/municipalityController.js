@@ -8,14 +8,14 @@ export const getMunicipalitiesByDepartment = async (req, res) => {
   const departmentId = parseInt(req.params.departmentId, 10); // Asegúrate de que se esté convirtiendo correctamente
 
     if (isNaN(departmentId)) {
-        return res.status(400).json({ error: messages.INVALID_DEPARTMENT_ID });
+        return res.status(400).json({ error: messages.LOCATION.MUNICIPALITY.INVALID_MUNICIPALITY_ID });
     }
 
     try {
         const municipalities = await Municipality.find({ department: departmentId });
         res.json(municipalities);
     } catch (error) {
-        res.status(500).json({ error:messages.GET_MUNICIPALITIES_ERROR });
+        res.status(500).json({ error: messages.LOCATION.MUNICIPALITY.GET_MUNICIPALITIES_ERROR });
     }
 };
 
@@ -29,7 +29,7 @@ export const createMultipleMunicipalities = async (req, res) => {
     // Verificar que el departamento existe en la base de datos
     const departmentExists = await Department.findOne({ departmentId }); 
     if (!departmentExists) {
-      return res.status(404).json({ error: messages.DEPARTMENT_NOT_FOUND });
+      return res.status(404).json({ error: messages.LOCATION.DEPARTMENT.DEPARTMENT_NOT_FOUND });
     }
 
     const createdMunicipalities = [];
@@ -46,7 +46,7 @@ export const createMultipleMunicipalities = async (req, res) => {
     }
 
     return res.status(201).json({
-      message: messages.MUNICIPALITIES_CREATED_SUCCESS,
+      message: messages.LOCATION.MUNICIPALITY.MUNICIPALITIES_CREATED_SUCCESS,
       municipalities: createdMunicipalities,
     });
   } catch (error) {

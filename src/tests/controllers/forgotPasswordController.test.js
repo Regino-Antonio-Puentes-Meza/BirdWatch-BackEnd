@@ -18,15 +18,15 @@ describe('forgotPasswordController', () => {
 
     beforeEach(() => {
         req = {
-            body: {
-                correoElectronico: mockUser.correoElectronico
-            }
+            body: { correoElectronico: 'test@example.com' }
         };
 
         res = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
         };
+
+        jest.spyOn(console, 'error').mockImplementation(() => { });
     });
 
     it('debe devolver 400 si el usuario no existe', async () => {

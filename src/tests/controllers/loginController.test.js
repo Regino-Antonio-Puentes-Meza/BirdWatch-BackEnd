@@ -24,6 +24,8 @@ describe('loginController', () => {
             status: jest.fn().mockReturnThis(),
             json: jest.fn()
         };
+        
+        jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
     it('debe autenticar al usuario correctamente', async () => {

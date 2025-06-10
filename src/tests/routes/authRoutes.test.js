@@ -1,7 +1,7 @@
 import request from 'supertest';
+jest.mock('../../config/dbConnect.js', () => jest.fn(() => Promise.resolve()));
 import app from '../../../app.js';
 
-jest.mock('../../config/dbConnect.js', () => jest.fn());
 
 describe('Rutas de autenticación', () => {
 

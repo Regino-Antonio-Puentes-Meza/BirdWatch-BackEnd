@@ -50,7 +50,7 @@ app.use((req, res) => {
 });
 
 // Iniciar el servidor solo si no está en entorno de pruebas
-// if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test') {
   const PORT = process.env.PORT || 3000;
 
   dbConnect().then(() => {
@@ -61,6 +61,6 @@ app.use((req, res) => {
   }).catch((error) => {
     console.error('Error al conectar la base de datos:', error.message);
   });
-// }
+}
 
 export default app;

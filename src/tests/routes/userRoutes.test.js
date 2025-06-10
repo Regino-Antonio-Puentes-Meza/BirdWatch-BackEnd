@@ -1,9 +1,9 @@
 import request from 'supertest';
+jest.mock('../../config/dbConnect.js', () => jest.fn(() => Promise.resolve()));
 import app from '../../../app.js';
-import User from 'src/models/UserModel.js';
+import User from '../../models/UserModel.js';
 
 jest.mock('../../models/UserModel.js');
-jest.mock('../../config/dbConnect.js', () => jest.fn());
 
 describe('POST /api/register', () => {
     beforeEach(() => {
