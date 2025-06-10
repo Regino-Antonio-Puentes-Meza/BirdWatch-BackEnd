@@ -9,61 +9,45 @@ import userRoutes from './src/routes/userRoutes.js';
 import birdRoutes from './src/routes/birdsRoutes.js';
 import departmentRoutes from './src/routes/location/departmentRoutes.js';
 import municipalityRoutes from './src/routes/location/municipalityRoutes.js';
-import dbConnect from './src/config/dbConnect.js';
 import authMiddleware from './src/middlewares/authMiddleware.js';
 
 dotenv.config();
 
-async function startServer() {
-  try {
-    await dbConnect();
-    console.log('Conexión a la base de datos establecida');
+const app = express();
 
-    const server = express();
-    const PORT = process.env.PORT || 3000;
+// Configuración de CORS
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Authorization');
+  next();
+});
 
-    // Configuración de CORS
-    server.use((req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Authorization');
-      next();
-    });
+// Middleware para manejo de JSON y datos codificados
+app.use(express.json());
+app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
 
-    // Middleware para manejo de JSON y datos codificados
-    server.use(express.json());
-    server.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
+// Middleware para registrar las solicitudes
+app.use((req, res, next) => {
+  console.info(`Solicitud ${req.method} en la ruta ${req.originalUrl}`);
+  next();
+});
 
-    // Middleware para registrar las solicitudes
-    server.use((req, res, next) => {
-      console.info(`Solicitud ${req.method} en la ruta ${req.originalUrl}`);
-      next(); // Llama a next() para pasar al siguiente middleware o controlador
-    });
+// Rutas públicas
+app.use('/api/auth', authRoutes);
 
-   // Rutas públicas (no requieren autenticación)
-   server.use('/api/auth', authRoutes);
+// Rutas protegidas
+app.use('/api/upload', authMiddleware, uploadRoutes);
+app.use('/api/news', authMiddleware, newsRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/user', authMiddleware, userRoutes);
+app.use('/api/birds', birdRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/municipalities', municipalityRoutes);
 
-   // Rutas protegidas (requieren autenticación)
-   server.use('/api/upload', authMiddleware, uploadRoutes);
-   server.use('/api/news', authMiddleware, newsRoutes);
-   server.use('/api/posts', postRoutes);
-   server.use('/api/user', authMiddleware, userRoutes);
-   server.use('/api/birds', birdRoutes);
-   server.use('/api/departments', departmentRoutes);
-   server.use('/api/municipalities', municipalityRoutes);
-   
-    // Ruta 404 para rutas no encontradas
-    server.use((req, res) => {
-      res.status(404).json({ message: 'Ruta no encontrada' });
-    });
+// Ruta 404
+app.use((req, res) => {
+  res.status(404).json({ message: 'Ruta no encontrada' });
+});
 
-    server.listen(PORT, () => {
-      console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    });
-
-  } catch (error) {
-    console.error('Se a presentado el siguiente error en la ejecución: ', error.message);
-  }
-}
-
-startServer();
+export default app;
