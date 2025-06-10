@@ -1,4 +1,5 @@
 import NewsModel from '../models/News.js';
+import messages from '@/utils/messages.js'; 
 
 // Crear una nueva noticia
 export const createNews = async (req, res) => {
@@ -6,9 +7,10 @@ export const createNews = async (req, res) => {
 
     try {
         await newNews.save();
-        res.status(200).json("Noticia creada con exito!");
+        res.status(200).json({ message: messages.NEWS.NEWS_CREATED }); 
     } catch (error) {
-        res.status(500).json(error);
+        console.error( error); 
+        res.status(500).json({ error }); 
     }
 };
 
@@ -18,10 +20,10 @@ export const getAllNews = async (req, res) => {
         const news = await NewsModel.find();
         res.status(200).json(news);
     } catch (error) {
-        res.status(500).json(error);
-    }
+        console.error( error); 
+        res.status(500).json({ error });
 };
-
+}
 // Obtener una noticia por ID
 export const getNewsById = async (req, res) => {
     const id = req.params.id;
@@ -30,7 +32,7 @@ export const getNewsById = async (req, res) => {
         const news = await NewsModel.findById(id);
         res.status(200).json(news);
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json({ error }); 
     }
 };
 
@@ -53,8 +55,8 @@ export const deleteNews = async (req, res) => {
     const id = req.params.id;
 
     try {
-        await NewsModel.findByIdAndDelete(id);
-        res.status(200).json("Noticia eliminada con exito!");
+        const deletedNews = await NewsModel.findByIdAndDelete(id);
+        res.status(200).json({ message: messages.NEWS.NEWS_DELETED }); 
     } catch (error) {
         res.status(500).json(error);
     }

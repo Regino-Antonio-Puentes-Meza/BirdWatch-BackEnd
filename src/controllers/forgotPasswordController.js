@@ -2,6 +2,7 @@ import dbConnect from '../config/dbConnect.js';
 import User from '../models/UserModel.js';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/emailService.js'; // Importa el servicio de envío de correos
+import messages from '@/utils/messages.js'; 
 
 //Recuperar contraseña
 export async function forgotPassword(req, res) {
@@ -12,13 +13,13 @@ export async function forgotPassword(req, res) {
 
         const user = await User.findOne({ correoElectronico });
         if (!user) {
-            return res.status(400).json({ message: 'Usuario no encontrado' });
+            return res.status(400).json({ error: messages.USER.USER_NOT_FOUND }); 
         }
 
         // Generar el token de recuperación de contraseña válido por 15 minutos
         const resetToken = jwt.sign(
             { id: user.id },
-            process.env.JWT_SECRET, 
+            process.env.JWT_SECRET,
             { expiresIn: '15m' } // Token válido por 15 minutos
         );
 
@@ -28,15 +29,14 @@ export async function forgotPassword(req, res) {
         // Texto y HTML del correo
         const subject = 'Recuperación de contraseña';
         const text = `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink}`;
-        const html = `<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-                      <a href="${resetLink}">${resetLink}</a>`;
+        const html = `<p>Haz clic en el siguiente enlace para restablecer tu contraseña:</<a href="${resetLink}">${resetLink}</a>`;
 
         // Llamar a la función `sendEmail` para enviar el correo
         await sendEmail(correoElectronico, subject, text, html);
 
-        return res.status(200).json({ message: 'Se ha enviado un enlace de recuperación de contraseña a tu correo' });
+        return res.status(200).json({ error: messages.PASSWORD_RESET.PASSWORD_RESET_LINK }); 
     } catch (error) {
-        console.error('Error en la recuperación de contraseña:', error);
-        return res.status(500).json({ error: 'Error al intentar recuperar la contraseña' });
+        console.error(messages.PASSWORD_RESET.PASSWORD_RECOVERY_ERROR, error); 
+        return res.status(500).json({ error: messages.PASSWORD_RESET.PASSWORD_RECOVERY_ERROR }); 
     }
 }

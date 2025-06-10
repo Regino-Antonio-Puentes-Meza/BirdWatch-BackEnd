@@ -1,5 +1,7 @@
+import messages from "@/utils/messages.js";
 import UserModel from "../models/UserModel.js";
 import bcrypt from "bcrypt";
+
 // get a User
 export const getUser = async (req, res) => {
   const id = req.params.id;
@@ -12,7 +14,7 @@ export const getUser = async (req, res) => {
 
       res.status(200).json(otherDetails);
     } else {
-      res.status(404).json("No such user exists");
+      res.status(404).json({error: messages.USER.USER_NOT_FOUND}); 
     }
   } catch (error) {
     res.status(500).json(error);
@@ -40,7 +42,7 @@ export const updateUser = async (req, res) => {
       res.status(500).json(error);
     }
   } else {
-    res.status(403).json("Access Denied! you can only update your own profile");
+    res.status(403).json({error: messages.AUTH.ACCESS_DENIED_UPDATE_PROFILE}); 
   }
 };
 
@@ -53,12 +55,12 @@ export const deleteUser = async (req, res) => {
   if (currentUserId === id || currentUserAdminStatus) {
     try {
       await UserModel.findByIdAndDelete(id);
-      res.status(200).json("User deleted successfully");
+      res.status(200).json({error: messages.USER.USER_DELETED}); 
     } catch (error) {
       res.status(500).json(error);
     }
   } else {
-    res.status(403).json("Access Denied! you can only delete your own profile");
+    res.status(403).json({error: messages.AUTH.ACCESS_DENIED_UPDATE_PROFILE}); 
   }
 };
 
@@ -69,7 +71,7 @@ export const followUser = async (req, res) => {
   const { currentUserId } = req.body;
 
   if (currentUserId === id) {
-    res.status(403).json("Action forbidden");
+    res.status(403).json(messages.USER.ACTION_FORBIDDEN); 
   } else {
     try {
       const followUser = await UserModel.findById(id);
@@ -78,9 +80,9 @@ export const followUser = async (req, res) => {
       if (!followUser.followers.includes(currentUserId)) {
         await followUser.updateOne({ $push: { followers: currentUserId } });
         await followingUser.updateOne({ $push: { following: id } });
-        res.status(200).json("User followed!");
+        res.status(200).json(messages.USER.USER_FOLLOWED); 
       } else {
-        res.status(403).json("User is Already followed by you");
+        res.status(403).json(messages.USER.USER_ALREADY_FOLLOWED); 
       }
     } catch (error) {
       res.status(500).json(error);
@@ -95,7 +97,7 @@ export const UnFollowUser = async (req, res) => {
   const { currentUserId } = req.body;
 
   if (currentUserId === id) {
-    res.status(403).json("Action forbidden");
+    res.status(403).json(messages.USER.ACTION_FORBIDDEN); 
   } else {
     try {
       const followUser = await UserModel.findById(id);
@@ -104,9 +106,11 @@ export const UnFollowUser = async (req, res) => {
       if (followUser.followers.includes(currentUserId)) {
         await followUser.updateOne({ $pull: { followers: currentUserId } });
         await followingUser.updateOne({ $pull: { following: id } });
-        res.status(200).json("User Unfollowed!");
+
+        res.status(200).json(messages.USER.USER_UNFOLLOWED);
       } else {
-        res.status(403).json("User is not followed by you");
+
+        res.status(403).json(messages.USER.USER_IS_NOT_FOLLOWED);
       }
     } catch (error) {
       res.status(500).json(error);

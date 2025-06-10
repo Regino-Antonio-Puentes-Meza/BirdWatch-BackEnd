@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import messages from '@/utils/messages.js'; 
 dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error('Por favor, define la variable de entorno MONGODB_URI');
+
+  throw new Error(messages.DATABASE.MONGODB_URI_UNDEFINED);
 }
 
 let cached = global.mongoose;
@@ -21,14 +23,14 @@ async function dbConnect() {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      console.log('Conectando a la base de datos');
+      console.log(messages.DATABASE.DATABASE_CONNECTING); 
       return mongoose;
     }).catch((error) => {
       if (error.code === 'ETIMEOUT') {
-        console.error('Error de conexión: Tiempo de espera agotado.');
-        console.error('Por favor, verifique que su IP pública esté configurada en MongoDB Atlas para permitir la conexión a la base de datos.');
+        console.error(messages.DATABASE.CONNECTION_TIMEOUT_ERROR); 
+        console.error(messages.DATABASE.CHECK_IP_PUBLIC_ATLAS); 
       } else {
-        console.error('Error al conectar con la base de datos:', error.message);
+        console.error(messages.DATABASE.DATABASE_CONNECTION_ERROR, error.message); 
       }
       throw error;
     });
