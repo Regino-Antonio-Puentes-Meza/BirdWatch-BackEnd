@@ -48,18 +48,21 @@ export const getPost = async (req, res) => {
 // Update a post
 export const updatePost = async (req, res) => {
   const postId = req.params.id;
-  const { userId } = req.body;
 
   try {
-    const post = await Post.findById(postId);
-    if (post.userId.equals(userId)) {
-      await post.updateOne({ $set: req.body });
-      res.status(200).json(messages.POST.POST_UPDATED); 
-    } else {
-      res.status(403).json(messages.USER.ACTION_FORBIDDEN); 
+    const updatedPost = await Post.findByIdAndUpdate(postId, { $set: req.body }, { new: true });
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post no encontrado" });
     }
+
+    res.status(200).json({
+      message: messages.POST.POST_UPDATED,
+      post: updatedPost,
+    });
   } catch (error) {
-    handleError(res, error, messages.POST.POST_UPDATE_ERROR); 
+    console.error(error);
+    res.status(500).json({ message: messages.POST.POST_UPDATE_ERROR, error: error.message });
   }
 };
 
